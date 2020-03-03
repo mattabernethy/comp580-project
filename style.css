@@ -1,0 +1,59 @@
+#frontPageWrapper{
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    grid-template-rows: 15vh 15vh 40vh 30vh
+}
+
+#frontPageTitle{
+    font-size: 450%;
+    grid-column: 5/11;
+    grid-row: 2/3;
+    text-align: center;
+}
+
+#difficulties{
+    grid-column: 7/9;
+    grid-row: 3/4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.difficultyButton{
+    background: black;
+    color: white;
+    border-radius: 30vh;
+    margin-bottom: 5vh;
+    width: 20vh;
+    height: 5vh;
+    display: flex;
+    font-size: 3vh;
+}
+
+.difficultyButton > p{
+    margin: auto;
+    text-align: center;
+}
+
+.difficultyButton:hover{
+    color: red;
+    cursor: pointer;
+}
+
+#logoWrapper{
+    grid-column: 7/9;
+    grid-row: 4/5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#logoWrapper > div{
+    margin-bottom: 1vh;
+}
+
+.f1{
+    font-family: 'Roboto', serif;
+}
+
