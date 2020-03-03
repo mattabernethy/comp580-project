@@ -1,2 +1,2 @@
-# comp590-project
-COMP 590 Math Fighting Game
+# comp580-project
+COMP 580 Math Fighting Game
