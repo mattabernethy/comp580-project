@@ -5,7 +5,7 @@
 }
 
 #frontPageTitle{
-    font-size: 450%;
+    font-size: 6vh;
     grid-column: 5/11;
     grid-row: 2/3;
     text-align: center;
@@ -51,6 +51,10 @@
 
 #logoWrapper > div{
     margin-bottom: 1vh;
+}
+
+#names{
+    font-size: 1vh;
 }
 
 .f1{
