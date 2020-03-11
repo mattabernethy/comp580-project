@@ -149,6 +149,11 @@
     align-items: center;
 }
 
+.answerButton:hover{
+    opacity: 0.5;
+    cursor: pointer;
+}
+
 #answerOne{
     margin-right: 3vh;
     background-color: #932F2F;
