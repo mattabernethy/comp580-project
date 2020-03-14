@@ -1,5 +1,7 @@
 $(document).ready(function () {
     let timer;  // Global question timer variable
+    let difficulty;
+    let streak = 0;
 
     // Input (nothing yet, maybe difficulty later?), Output (void: generates random addition question on screen)
     function generateAdditionQuestion() {
@@ -60,7 +62,7 @@ $(document).ready(function () {
     // Input (nothing for now, maybe difficulty later?), Output (void: changes timer number on screen)
     function generateQuestionTimer() {
         let startTime = Date.now();
-        let timeLimit = 3;
+        let timeLimit = 6;
         let timeRemaining = timeLimit;
 
         $("#timerCountDown").text(timeRemaining);
@@ -75,7 +77,9 @@ $(document).ready(function () {
             if (Math.floor(timeRemaining) <= 0) {
                 clearInterval(timer);
                 console.log("You take damage.");
+                streak = 0;
 
+                updateStreak();
                 generateAdditionQuestion();
                 generateAnswerChoices();
                 generateQuestionTimer();
@@ -83,12 +87,29 @@ $(document).ready(function () {
         }, 1000)
     }
 
+    // Stops the current timer
+    function stopQuestionTimer() {
+        clearInterval(timer);
+    }
+
+
+    // Updates the streak displayed on screen
+    function updateStreak() {
+        if (streak >= 3) {
+            $("#comboNumber").text("Combo x" + streak + "!");
+            $("#damageNumber").text("Damage x2!");
+        } else {
+            $("#comboNumber").text("Combo x" + streak);
+            $("#damageNumber").empty();
+        }
+    }
+
 
 
     // Transitions to battle page upon clicking a difficulty on main menu
     $(".difficultyButton").click(function () {
         console.log(this);
-        const difficulty = $(this).find("p").text();
+        difficulty = $(this).find("p").text();
         console.log(difficulty);
 
         // Turn frontPageWrapper from index.html into battlePageWrapper from battle.html
@@ -115,6 +136,7 @@ $(document).ready(function () {
                     }
 
                     // Generate first question and its answer choices
+                    updateStreak();
                     generateAdditionQuestion();
                     generateAnswerChoices();
                     generateQuestionTimer();
@@ -130,7 +152,7 @@ $(document).ready(function () {
 
     // Damage mechanics and change question upon clicking answer choice
     $(document).on("click", ".answerButton", function () {
-        clearInterval(timer);  // Clears timer for previous question
+        stopQuestionTimer();  // Stop timer for current question
 
         const correctAns = eval($("#question").find("p").text());
         const yourAns = $(this).find("span").text();
@@ -141,11 +163,14 @@ $(document).ready(function () {
         // If correct, monster takes damage. If incorrect, you take damage.
         if (isCorrect) {
             console.log("Monster takes damage!");
+            streak += 1;
         } else {
             console.log("You take damage.");
+            streak = 0;
         }
 
         // New question and corresponding answer choices
+        updateStreak();
         generateAdditionQuestion();
         generateAnswerChoices();
         generateQuestionTimer();
