@@ -18,14 +18,14 @@ $(document).ready(function () {
         monsterHealth -= playerAttack;
         console.log("Monster takes damage!");
         console.log("Monster health remaining: " + monsterHealth);
-    }
+    };
 
     function playerTakesDamage() {
         streak = 0;
         playerHealth -= 1;
         console.log("You take damage.");
         console.log("Your health remaining: " + playerHealth);
-    }
+    };
 
     // Input (nothing yet, maybe difficulty later?), Output (void: generates random addition question on screen)
     function generateAdditionQuestion() {
@@ -33,7 +33,7 @@ $(document).ready(function () {
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " + " + rightNum;
         $("#question").find("p").text(equation);
-    }
+    };
 
     // Input (nothing), Output (void: generates 1 correct answer and 2 random incorrect answers on screen)
     function generateAnswerChoices() {
@@ -47,11 +47,17 @@ $(document).ready(function () {
         const positiveOrNeg1 = Math.round(Math.random()) * 2 - 1;   // Returns either -1 or 1
         const positiveOrNeg2 = Math.round(Math.random()) * 2 - 1;
 
-        const incorrectChoice1 = correctAns + (positiveOrNeg1 * (Math.floor(Math.random() * 5) + 1));
+        let incorrectChoice1 = correctAns + (positiveOrNeg1 * (Math.floor(Math.random() * 5) + 1));
+
+        // Makes sure it is not a negative answer choice
+        while (incorrectChoice1 < 0) {
+            incorrectChoice1 = correctAns + (positiveOrNeg1 * (Math.floor(Math.random() * 5) + 1));
+        }
+
         let incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
 
-        // Makes sure there are no duplicate incorrect choices
-        while (incorrectChoice2 == incorrectChoice1) {
+        // Makes sure it is not a duplicate incorrect choice, and not a negative answer choice
+        while ((incorrectChoice2 == incorrectChoice1) || (incorrectChoice2 < 0)) {
             incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
         }
 
@@ -71,10 +77,10 @@ $(document).ready(function () {
             $("#answerOne").find("span").text(incorrectChoice1);
             $("#answerTwo").find("span").text(incorrectChoice2);
         }
-    }
+    };
 
 
-    // Input (nothing for now), Output (void: sets time limit based on difficulty, starts question timer countdown on screen)
+    // Input (nothing), Output (void: sets time limit based on difficulty, starts question timer countdown on screen)
     function generateQuestionTimer() {
         let startTime = Date.now();
         let timeLimit;
@@ -84,7 +90,7 @@ $(document).ready(function () {
             timeLimit = 30;
         } else if (difficulty == "Medium") {
             timeLimit = 15;
-        } else {
+        } else {  // Hard
             timeLimit = 5;
         }
 
@@ -110,12 +116,12 @@ $(document).ready(function () {
                 generateQuestionTimer();
             }
         }, 1000)
-    }
+    };
 
     // Stops the current timer
     function stopQuestionTimer() {
         clearInterval(timer);
-    }
+    };
 
 
     // Updates player hit streak displayed on screen
@@ -127,7 +133,25 @@ $(document).ready(function () {
             $("#comboNumber").text("Combo x" + streak);
             $("#damageNumber").empty();
         }
-    }
+    };
+
+
+    // Submits answer denoted by class of "chosenAnswer"
+    function submitAnswer() {
+        const correctAns = eval($("#question").find("p").text());
+        const yourAns = $(".chosenAnswer").find("span").text();
+        console.log("Your Answer: " + yourAns + "    Correct Answer: " + correctAns);
+
+        $(".chosenAnswer").removeClass("chosenAnswer");
+
+        const isCorrect = (yourAns == correctAns);
+        // If correct, monster takes damage. If incorrect, you take damage.
+        if (isCorrect) {
+            monsterTakesDamage();
+        } else {
+            playerTakesDamage();
+        }
+    };
 
 
 
@@ -166,21 +190,13 @@ $(document).ready(function () {
     });
 
 
-    // Damage mechanics and change question upon clicking answer choice
+    // Submits answer choice that was clicked on
     $(document).on("click", ".answerButton", function () {
         stopQuestionTimer();  // Stop timer for current question
 
-        const correctAns = eval($("#question").find("p").text());
-        const yourAns = $(this).find("span").text();
-        console.log("Your Answer: " + yourAns + "    Correct Answer: " + correctAns);
-
-        const isCorrect = (yourAns == correctAns);
-        // If correct, monster takes damage. If incorrect, you take damage.
-        if (isCorrect) {
-            monsterTakesDamage();
-        } else {
-            playerTakesDamage();
-        }
+        // Clicked answer choice becomes chosen answer and submitted
+        $(this).addClass("chosenAnswer");
+        submitAnswer();
 
         // New question and corresponding answer choices
         updateStreak();
@@ -190,6 +206,57 @@ $(document).ready(function () {
     });
 
 
+    // Interact with game with keyboard
+    $(document).keydown(function (e) {
+        // Sift through answer choices with left arrow key
+        if (e.keyCode == 37) {
+            if (!$(".focusable").hasClass("focused")) {
+                // If no answer choice is currently selected, select rightmost choice
+                $(".focusable").last().addClass("focused");
+            } else if ($(".focused").prev(".focusable").length) {
+                // If answer choice to left of current choice exists, select left choice
+                $(".focused").removeClass("focused").prev(".focusable").addClass("focused");
+            } else {
+                // Else select rightmost answer choice (there is no other choice to left of current choice)
+                $(".focused").removeClass("focused").siblings(":last").addClass("focused");
+            }
+        }
 
+        // Sift through answer choices with right arrow key
+        if (e.keyCode == 39) {
+            if (!$(".focusable").hasClass("focused")) {
+                // If no answer choice is currently selected, select leftmost choice
+                $(".focusable").first().addClass("focused");
+            } else if ($(".focused").next(".focusable").length) {
+                // If answer choice to right of current choice exists, select right choice
+                $(".focused").removeClass("focused").next(".focusable").addClass("focused");
+            } else {
+                // Else select leftmost answer choice (there is no other choice to right of current choice)
+                $(".focused").removeClass("focused").siblings(":first").addClass("focused");
+            }
+        }
+
+        // Submit answer choice currently selected with spacebar
+        if (e.keyCode == 32) {
+            stopQuestionTimer();    // Stop timer for current question
+
+            // Answer choice selected by spacebar is submitted
+            $(".focused").addClass("chosenAnswer");
+            submitAnswer();
+
+            // New question and corresponding answer choices
+            updateStreak();
+            generateAdditionQuestion();
+            generateAnswerChoices();
+            generateQuestionTimer();
+        }
+    });
+
+
+    // Focus answer choice on mouse hover
+    $(document).on("mouseenter", ".focusable", function () {
+        $(".focusable").removeClass("focused");
+        $(this).addClass("focused");
+    });
 
 });
