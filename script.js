@@ -1,7 +1,9 @@
 $(document).ready(function () {
     let timer;  // Global question timer variable
     let difficulty;
+    let world = "addition";   // The theme for each world
     let streak = 0;
+    let correctAns;
     let playerHealth = 3;
     let monsterHealth = 4;
     let playerAttack = 1;
@@ -27,19 +29,83 @@ $(document).ready(function () {
         console.log("Your health remaining: " + playerHealth);
     };
 
+    function generateQuestion() {
+        if (world == "addition") {
+            generateAddQuestion();
+        } else if (world == "subtraction") {
+            generateSubQuestion();
+        } else if (world == "multiplication") {
+            generateMultQuestion();
+        } else if (world == "division") {
+            generateDivQuestion();
+        } else {  // mixed math final boss
+            // Returns random integer 0, 1, 2, or 3
+            const questionType = Math.floor(Math.random() * 4);
+
+            if (questionType = 0) {
+                generateAddQuestion();
+            } else if (questionType == 1) {
+                generateSubQuestion();
+            } else if (questionType == 2) {
+                generateMultQuestion();
+            } else {  // questionType == 3
+                generateDivQuestion();
+            }
+        }
+
+        // Calculates correct answer of current question
+        correctAns = eval($("#question").find("p").text());
+
+        generateAnswerChoices();
+    }
+
     // Input (nothing yet, maybe difficulty later?), Output (void: generates random addition question on screen)
-    function generateAdditionQuestion() {
+    function generateAddQuestion() {
         const leftNum = Math.floor(Math.random() * 10) + 1;
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " + " + rightNum;
         $("#question").find("p").text(equation);
     };
 
+    function generateSubQuestion() {
+        let leftNum = Math.floor(Math.random() * 10) + 1;
+        let rightNum = Math.floor(Math.random() * 10) + 1;
+
+        // Makes sure the answer is non-negative
+        if (leftNum < rightNum) {
+            // leftNum = rightNum + (Math.floor(Math.random() * (10 - rightNum)) + 1);
+            leftNum = Math.floor(Math.random() * 10) + 1;
+        }
+
+        const equation = leftNum + " - " + rightNum;
+        $("#question").find("p").text(equation);
+    }
+
+    function generateMultQuestion() {
+        const leftNum = Math.floor(Math.random() * 10) + 1;
+        const rightNum = Math.floor(Math.random() * 10) + 1;
+        const equation = leftNum + " * " + rightNum;
+        $("#question").find("p").text(equation);
+    }
+
+    function generateDivQuestion() {
+        let leftNum = Math.floor(Math.random() * 10) + 1;
+        let rightNum = Math.floor(Math.random() * 10) + 1;
+
+        // Makes sure the answer is an integer
+        while (!Number.isInteger(leftNum / rightNum)) {
+            leftNum = Math.floor(Math.random() * 10) + 1;
+            rightNum = Math.floor(Math.random() * 10) + 1;
+            console.log("loop");
+            console.log(leftNum + " / " + rightNum);
+        }
+
+        const equation = leftNum + " / " + rightNum;
+        $("#question").find("p").text(equation);
+    }
+
     // Input (nothing), Output (void: generates 1 correct answer and 2 random incorrect answers on screen)
     function generateAnswerChoices() {
-        // Calculates correct answer of current displayed question
-        const correctAns = eval($("#question").find("p").text());
-
         // Returns random integer 0, 1, or 2 to decide correctAns location
         const correctAnsId = Math.floor(Math.random() * 3);
 
@@ -111,8 +177,7 @@ $(document).ready(function () {
                 playerTakesDamage();
 
                 updateStreak();
-                generateAdditionQuestion();
-                generateAnswerChoices();
+                generateQuestion();
                 generateQuestionTimer();
             }
         }, 1000)
@@ -138,7 +203,6 @@ $(document).ready(function () {
 
     // Submits answer denoted by class of "chosenAnswer"
     function submitAnswer() {
-        const correctAns = eval($("#question").find("p").text());
         const yourAns = $(".chosenAnswer").find("span").text();
         console.log("Your Answer: " + yourAns + "    Correct Answer: " + correctAns);
 
@@ -177,8 +241,7 @@ $(document).ready(function () {
 
                     // Generate first question and its answer choices
                     updateStreak();
-                    generateAdditionQuestion();
-                    generateAnswerChoices();
+                    generateQuestion();
                     generateQuestionTimer();
 
                     $("#battlePageWrapper").fadeIn(250);
@@ -200,8 +263,7 @@ $(document).ready(function () {
 
         // New question and corresponding answer choices
         updateStreak();
-        generateAdditionQuestion();
-        generateAnswerChoices();
+        generateQuestion();
         generateQuestionTimer();
     });
 
@@ -238,17 +300,20 @@ $(document).ready(function () {
 
         // Submit answer choice currently selected with spacebar
         if (e.keyCode == 32) {
-            stopQuestionTimer();    // Stop timer for current question
 
-            // Answer choice selected by spacebar is submitted
-            $(".focused").addClass("chosenAnswer");
-            submitAnswer();
+            // Spacebar only submits answer if any one of the answer buttons is focused
+            if ($(".focusable").hasClass("focused")) {
+                stopQuestionTimer();    // Stop timer for current question
 
-            // New question and corresponding answer choices
-            updateStreak();
-            generateAdditionQuestion();
-            generateAnswerChoices();
-            generateQuestionTimer();
+                // Answer choice selected by spacebar is submitted
+                $(".focused").addClass("chosenAnswer");
+                submitAnswer();
+
+                // New question and corresponding answer choices
+                updateStreak();
+                generateQuestion();
+                generateQuestionTimer();
+            }
         }
     });
 
