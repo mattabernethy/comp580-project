@@ -7,6 +7,10 @@ $(document).ready(function () {
     let playerHealth = 3;
     let monsterHealth = 4;
     let playerAttack = 1;
+    let playerName = "Player";
+
+    // Sets default Player Name to be "Player"
+    setName();
 
     function monsterTakesDamage() {
         streak += 1;
@@ -229,6 +233,9 @@ $(document).ready(function () {
         $.ajax({
             url: "battle.html",
             success: function (data) {
+
+                playerName = $("#nameInput").val();
+
                 $("#frontPageWrapper").fadeOut(250, function () {
                     // Get only the html underneath #battlePageWrapper
                     const newPage = $(data).filter("#battlePageWrapper").html();
@@ -245,12 +252,25 @@ $(document).ready(function () {
                     generateQuestionTimer();
 
                     $("#battlePageWrapper").fadeIn(250);
-                })
+
+                    setName();
+                });
             }
-        })
+        });
 
 
     });
+
+    // Sets Player name to be what it was entered as on Home Page
+    function setName() {
+        if(playerName === ""){
+            playerName = "Player";
+        }
+        console.log("Player Name set to " + playerName);
+
+        $("#playerName").html(playerName);
+
+    }
 
 
     // Submits answer choice that was clicked on
