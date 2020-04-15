@@ -87,10 +87,14 @@
 
 
 /*Battle Page CSS*/
+#battlePageOuterWrapper{
+    display: none;
+}
+
 #battlePageWrapper{
     display: grid;
     grid-template-columns: repeat(14, 1fr);
-    grid-template-rows: 20vh 60vh 20vh
+    grid-template-rows: 20vh 60vh 20vh;
 }
 
 #topWrapper{
@@ -101,14 +105,18 @@
 }
 
 #battleLogo{
-    margin-right: 20vh;
     font-size: 3vh;
+}
+
+#battleLogo:hover{
+    cursor: pointer;
 }
 
 #levelWrapper{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 20vh;
 }
 
 #levelCounter{

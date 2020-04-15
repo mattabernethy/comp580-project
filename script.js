@@ -8,6 +8,8 @@ $(document).ready(function () {
     let monsterHealth = 4;
     let playerAttack = 1;
     let playerName = "Player";
+    let frontPage = $("#frontPageWrapper").html();
+    let battlePage = $("#battlePageWrapper").html();
 
     // Sets default Player Name to be "Player"
     setName();
@@ -34,23 +36,23 @@ $(document).ready(function () {
     };
 
     function generateQuestion() {
-        if (world == "addition") {
+        if (world === "addition") {
             generateAddQuestion();
-        } else if (world == "subtraction") {
+        } else if (world === "subtraction") {
             generateSubQuestion();
-        } else if (world == "multiplication") {
+        } else if (world === "multiplication") {
             generateMultQuestion();
-        } else if (world == "division") {
+        } else if (world === "division") {
             generateDivQuestion();
         } else {  // mixed math final boss
             // Returns random integer 0, 1, 2, or 3
             const questionType = Math.floor(Math.random() * 4);
 
-            if (questionType = 0) {
+            if (questionType === 0) {
                 generateAddQuestion();
-            } else if (questionType == 1) {
+            } else if (questionType === 1) {
                 generateSubQuestion();
-            } else if (questionType == 2) {
+            } else if (questionType === 2) {
                 generateMultQuestion();
             } else {  // questionType == 3
                 generateDivQuestion();
@@ -127,17 +129,17 @@ $(document).ready(function () {
         let incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
 
         // Makes sure it is not a duplicate incorrect choice, and not a negative answer choice
-        while ((incorrectChoice2 == incorrectChoice1) || (incorrectChoice2 < 0)) {
+        while ((incorrectChoice2 === incorrectChoice1) || (incorrectChoice2 < 0)) {
             incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
         }
 
         // Display new answer choices
-        if (correctAnsId == 0) {
+        if (correctAnsId === 0) {
             $("#answerOne").find("span").text(correctAns);
             $("#answerTwo").find("span").text(incorrectChoice1);
             $("#answerThree").find("span").text(incorrectChoice2);
 
-        } else if (correctAnsId == 1) {
+        } else if (correctAnsId === 1) {
             $("#answerTwo").find("span").text(correctAns);
             $("#answerOne").find("span").text(incorrectChoice1);
             $("#answerThree").find("span").text(incorrectChoice2);
@@ -156,12 +158,12 @@ $(document).ready(function () {
         let timeLimit;
 
         // Adjust difficulty based on difficulty button selected
-        if (difficulty == "Easy") {
-            timeLimit = 30;
-        } else if (difficulty == "Medium") {
-            timeLimit = 15;
+        if (difficulty === "Easy") {
+            timeLimit = 60;
+        } else if (difficulty === "Medium") {
+            timeLimit = 45;
         } else {  // Hard
-            timeLimit = 5;
+            timeLimit = 30;
         }
 
         let timeRemaining = timeLimit;
@@ -212,7 +214,7 @@ $(document).ready(function () {
 
         $(".chosenAnswer").removeClass("chosenAnswer");
 
-        const isCorrect = (yourAns == correctAns);
+        const isCorrect = (yourAns === correctAns);
         // If correct, monster takes damage. If incorrect, you take damage.
         if (isCorrect) {
             monsterTakesDamage();
@@ -229,34 +231,52 @@ $(document).ready(function () {
         difficulty = $(this).find("p").text();
         console.log(difficulty);
 
-        // Turn frontPageWrapper from index.html into battlePageWrapper from battle.html
-        $.ajax({
-            url: "battle.html",
-            success: function (data) {
+        $("#frontPageOuterWrapper").fadeOut(500, function () {
+            playerName = $("#nameInput").val();
+            updateStreak();
+            generateQuestion();
+            generateQuestionTimer();
+            setName();
+            $("#battlePageOuterWrapper").fadeIn("slow");
 
-                playerName = $("#nameInput").val();
-
-                $("#frontPageWrapper").fadeOut(250, function () {
-                    // Get only the html underneath #battlePageWrapper
-                    const newPage = $(data).filter("#battlePageWrapper").html();
-
-                    // Set HTML of #frontPageWrapper to HTML underneath #battlePageWrapper
-                    $("#frontPageWrapper").html(newPage);
-
-                    // Change id of frontPageWraper to battlePageWrapper
-                    $("#frontPageWrapper").attr("id", "battlePageWrapper");
-
-                    // Generate first question and its answer choices
-                    updateStreak();
-                    generateQuestion();
-                    generateQuestionTimer();
-
-                    $("#battlePageWrapper").fadeIn(250);
-
-                    setName();
-                });
-            }
         });
+
+
+
+
+
+
+
+
+
+        // Turn frontPageWrapper from index.html into battlePageWrapper from battle.html
+        // $.ajax({
+        //     url: "battle.html",
+        //     success: function (data) {
+        //
+        //         playerName = $("#nameInput").val();
+        //
+        //         $("#frontPageWrapper").fadeOut(250, function () {
+        //             // Get only the html underneath #battlePageWrapper
+        //             const newPage = $(data).filter("#battlePageWrapper").html();
+        //
+        //             // Set HTML of #frontPageWrapper to HTML underneath #battlePageWrapper
+        //             $("#frontPageWrapper").html(newPage);
+        //
+        //             // Change id of frontPageWraper to battlePageWrapper
+        //             $("#frontPageWrapper").attr("id", "battlePageWrapper");
+        //
+        //             // Generate first question and its answer choices
+        //             updateStreak();
+        //             generateQuestion();
+        //             generateQuestionTimer();
+        //
+        //             $("#battlePageWrapper").fadeIn(250);
+        //
+        //             setName();
+        //         });
+        //     }
+        // });
 
 
     });
@@ -343,5 +363,23 @@ $(document).ready(function () {
         $(".focusable").removeClass("focused");
         $(this).addClass("focused");
     });
+
+    // Return to front page when you click the left hand corner title
+    $(document).on("click", "#battleLogo", function () {
+        stopQuestionTimer()
+        generateFrontPage();
+
+    });
+
+    // Generate the Front Page
+    function generateFrontPage(){
+       $("#battlePageOuterWrapper").fadeOut(500, function(){
+           $("#frontPageOuterWrapper").fadeIn(500);
+       });
+
+
+    }
+
+
 
 });
