@@ -1,3 +1,7 @@
+body{
+    overflow: hidden;
+}
+
 
 /*Front Page CSS*/
 #frontPageWrapper{
@@ -19,15 +23,37 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
 
+#instructionsButton{
+    width: 10vh;
+    height: 3vh;
+    background-color: gray;
+    border-radius: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1vh;
+    color: white;
+}
+
+#instructionsButton:hover {
+    color:red;
+    cursor: pointer;
+}
+
+#instructionsButton > p {
+    margin: auto;
+    text-align: center;
 }
 
 #nameInputWrapper{
-    margin-bottom: 5vh;
+    margin-bottom: 4vh;
     font-size: 2vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
 #nameInput{
@@ -42,8 +68,6 @@
     outline: none;
 }
 
-
-
 .difficultyButton{
     background: black;
     color: white;
@@ -55,7 +79,7 @@
     font-size: 3vh;
 }
 
-.difficultyButton > p{
+.difficultyButton  > p{
     margin: auto;
     text-align: center;
 }
@@ -83,6 +107,68 @@
 
 .f1{
     font-family: 'Roboto', serif;
+}
+
+
+/*Instructions Overlay CSS*/
+
+#instructionsOuterWrapper{
+    position:fixed;
+    display: none;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+#instructionsWrapper{
+    background-color: gray;
+    border-radius: 2vh;
+    padding:7vh;
+    width: 50%;
+    height: 50%;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#instructionHeaderWrapper{
+    display: flex;
+    justify-content: center;
+}
+
+#instructionHeader{
+    font-size: 3vh;
+}
+
+#instructionsContent{
+    font-size: 1.5vh;
+    line-height: 3vh;
+
+}
+
+#instructionsReturnButton{
+    width: 15vh;
+    height: 5vh;
+    background-color: black;
+    border-radius: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1vh;
+    color: white;
+    font-size: 2.5vh;
+}
+
+#instructionsReturnButton:hover{
+    color:red;
+    cursor: pointer;
 }
 
 
