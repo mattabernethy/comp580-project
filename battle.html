@@ -5,40 +5,42 @@
   <title>Battle Screen</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="script.js"></script>
 </head>
 <body>
   <div id="battlePageWrapper" class="f1">
-
     <div id="topWrapper">
-      <div id="battleLogo">MATH CRUNCHER <span style="color: red">2000</span></div>
+      <div id="battleLogoWrapper">
+        <div id="battleLogo">MATH CRUNCHER <span style="color: red">2000</span></div>
+      </div>
+
       <div id="levelWrapper">
         <div id="levelCounter">World 1 - Stage 1</div>
         <div id="countdown">BATTLE!</div>
       </div>
     </div>
 
-
-
     <div id="playerWrapper">
       <div id="mathWrapper">
         <div id="question">
-          <p>(6 + 8) x 3</p>
+          <p>(6 + 8) * 3</p>
         </div>
         <div id="answersWrapper">
-          <div class="answerButton" id="answerOne">
+          <div class="answerButton focusable" id="answerOne">
             <span>42</span>
           </div>
-          <div class="answerButton" id="answerTwo">
+          <div class="answerButton focusable" id="answerTwo">
             <span>30</span>
           </div>
-          <div class="answerButton" id="answerThree">
+          <div class="answerButton focusable" id="answerThree">
             <span>46</span>
           </div>
         </div>
       </div>
 
       <div class="healthWrapper" id="playerHealth">
-        <p class="healthName">Your Name</p>
+        <p class="healthName" id="playerName">Your Name</p>
         <div class="hearts" id="playerHearts">
           <img src="assets/fullHeart.svg" class="pHeart">
           <img src="assets/fullHeart.svg" class="pHeart">
@@ -78,16 +80,6 @@
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-
   </div>
 
 </body>

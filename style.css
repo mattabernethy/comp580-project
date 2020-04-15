@@ -3,7 +3,7 @@
 #frontPageWrapper{
     display: grid;
     grid-template-columns: repeat(14, 1fr);
-    grid-template-rows: 15vh 15vh 40vh 30vh
+    grid-template-rows: 15vh 15vh 50vh 20vh
 }
 
 #frontPageTitle{
@@ -13,7 +13,7 @@
     text-align: center;
 }
 
-#difficulties{
+#midSection{
     grid-column: 7/9;
     grid-row: 3/4;
     display: flex;
@@ -21,6 +21,28 @@
     align-items: center;
 
 }
+
+#nameInputWrapper{
+    margin-bottom: 5vh;
+    font-size: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#nameInput{
+    margin-top: 1vh;
+    padding: 1vh;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 1vh;
+}
+
+#nameInput:focus{
+    outline: none;
+}
+
+
 
 .difficultyButton{
     background: black;
@@ -65,10 +87,14 @@
 
 
 /*Battle Page CSS*/
+#battlePageOuterWrapper{
+    display: none;
+}
+
 #battlePageWrapper{
     display: grid;
     grid-template-columns: repeat(14, 1fr);
-    grid-template-rows: 20vh 60vh 20vh
+    grid-template-rows: 20vh 60vh 20vh;
 }
 
 #topWrapper{
@@ -79,14 +105,18 @@
 }
 
 #battleLogo{
-    margin-right: 20vh;
     font-size: 3vh;
+}
+
+#battleLogo:hover{
+    cursor: pointer;
 }
 
 #levelWrapper{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 20vh;
 }
 
 #levelCounter{
@@ -147,6 +177,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.answerButton:hover{
+    cursor: pointer;
+}
+
+.focused{
+    opacity: 0.5;
 }
 
 #answerOne{
