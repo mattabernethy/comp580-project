@@ -1,4 +1,4 @@
 # comp580-project
-COMP 580 Math Fighting Game for COMP 580
-Matthew Abernethy and Michael Qi
+COMP 580 Math Fighting Game for COMP 580 <br/>
+Matthew Abernethy and Michael Qi <br/>
 mattabernethy.github.io/comp580-project
