@@ -1,4 +1,11 @@
 
+/*Common Classes*/
+
+.f1{
+    font-family: 'Roboto', serif;
+}
+
+
 /*Front Page CSS*/
 #frontPageWrapper{
     display: grid;
@@ -19,7 +26,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
 
 #nameInputWrapper{
@@ -41,8 +47,6 @@
 #nameInput:focus{
     outline: none;
 }
-
-
 
 .difficultyButton{
     background: black;
@@ -81,9 +85,7 @@
     font-size: 1vh;
 }
 
-.f1{
-    font-family: 'Roboto', serif;
-}
+
 
 
 /*Battle Page CSS*/
@@ -128,17 +130,66 @@
     font-size: 5vh;
 }
 
-#playerWrapper{
+#pWrapper{
     grid-column: 3/7;
     grid-row:2/3;
-    margin-top: 3vh;
+
+}
+
+.healthName{
+    font-size: 4vh;
+    margin-bottom: 2vh;
+}
+
+.healthBar{
+    height: 3vh;
+    width: 40vh;
+    border-style: none;
+    border-radius: 1vh;
+}
+
+.healthBar::-webkit-progress-bar {
+    border-radius: 1.5vh;
+    background-color: lightgray;
+}
+.healthBar::-webkit-progress-value {
+    border-radius: 1.5vh;
+}
+.healthBar::-moz-progress-bar {
+    /* style rules */
+}
+
+.healthCounter{
+    margin-top: 2vh;
+    font-size: 2vh;
+}
+
+#eWrapper{
+    grid-column: 9/13;
+    grid-row: 2/3;
+}
+
+#eHealthWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#imageWrapper{
+    display: flex;
+    justify-content: flex-end;
+}
+
+#enemyPic{
+    margin-top: 2vh;
+    width: 37vh;
+    height: auto;
 }
 
 #mathWrapper{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    margin-top: 8vh;
 }
 
 #question{
@@ -165,7 +216,6 @@
     align-items: center;
     font-size: 3vh;
     color: white;
-
 }
 
 .answerButton{
@@ -199,52 +249,6 @@
 
 #answerThree{
     background-color: #9F2171;
-}
-
-#playerHealth{
-    margin-top: 10vh;
-}
-
-.healthName{
-    font-size: 4vh;
-}
-
-.pHeart{
-    margin-right: 2vh;
-}
-
-#enemyWrapper{
-    grid-column: 9/13;
-    grid-row: 2/3;
-}
-
-#enemyHealth{
-    display: flex;
-    flex-direction: column;
-}
-
-#enemyHealth > p{
-    text-align: right;
-}
-
-#enemyHearts{
-    display: flex;
-    justify-content: flex-end;
-}
-
-.eHeart{
-    margin-left: 2vh;
-}
-
-#imageWrapper{
-    display: flex;
-    justify-content: flex-end;
-}
-
-#enemyPic{
-    margin-top: 2vh;
-    width: 37vh;
-    height: auto;
 }
 
 #comboWrapper{

@@ -4,9 +4,9 @@ $(document).ready(function () {
     let world = "addition";   // The theme for each world
     let streak = 0;
     let correctAns;
-    let playerHealth = 3;
-    let monsterHealth = 4;
-    let playerAttack = 1;
+    let playerHealth = $("#pHealthBar").val();
+    let monsterHealth = $("#eHealthBar").val();;
+     let playerAttack = 10;
     let playerName = "Player";
     let frontPage = $("#frontPageWrapper").html();
     let battlePage = $("#battlePageWrapper").html();
@@ -18,21 +18,30 @@ $(document).ready(function () {
         streak += 1;
 
         if (streak >= 4) {
-            playerAttack = 2;
+            playerAttack = 20;
         } else {
-            playerAttack = 1;
+            playerAttack = 10;
         }
 
         monsterHealth -= playerAttack;
+        $("#eHealthBar").val(monsterHealth);
+        $("#eHealthCounter").html("Health: " + monsterHealth + "/40")
+
         console.log("Monster takes damage!");
         console.log("Monster health remaining: " + monsterHealth);
     };
 
     function playerTakesDamage() {
         streak = 0;
-        playerHealth -= 1;
-        console.log("You take damage.");
-        console.log("Your health remaining: " + playerHealth);
+        playerHealth -= 10;
+
+        if(playerHealth === 0){
+            endGame();
+        }
+
+        $("#pHealthBar").val(playerHealth);
+        $("#pHealthCounter").html("Health: " + playerHealth + "/100")
+        console.log("You take damage. Your health is now " + playerHealth);
     };
 
     function generateQuestion() {
@@ -214,7 +223,7 @@ $(document).ready(function () {
 
         $(".chosenAnswer").removeClass("chosenAnswer");
 
-        const isCorrect = (yourAns === correctAns);
+        const isCorrect = (yourAns == correctAns);
         // If correct, monster takes damage. If incorrect, you take damage.
         if (isCorrect) {
             monsterTakesDamage();
@@ -222,7 +231,6 @@ $(document).ready(function () {
             playerTakesDamage();
         }
     };
-
 
 
     // Transitions to battle page upon clicking a difficulty on main menu
@@ -240,45 +248,6 @@ $(document).ready(function () {
             $("#battlePageOuterWrapper").fadeIn("slow");
 
         });
-
-
-
-
-
-
-
-
-
-        // Turn frontPageWrapper from index.html into battlePageWrapper from battle.html
-        // $.ajax({
-        //     url: "battle.html",
-        //     success: function (data) {
-        //
-        //         playerName = $("#nameInput").val();
-        //
-        //         $("#frontPageWrapper").fadeOut(250, function () {
-        //             // Get only the html underneath #battlePageWrapper
-        //             const newPage = $(data).filter("#battlePageWrapper").html();
-        //
-        //             // Set HTML of #frontPageWrapper to HTML underneath #battlePageWrapper
-        //             $("#frontPageWrapper").html(newPage);
-        //
-        //             // Change id of frontPageWraper to battlePageWrapper
-        //             $("#frontPageWrapper").attr("id", "battlePageWrapper");
-        //
-        //             // Generate first question and its answer choices
-        //             updateStreak();
-        //             generateQuestion();
-        //             generateQuestionTimer();
-        //
-        //             $("#battlePageWrapper").fadeIn(250);
-        //
-        //             setName();
-        //         });
-        //     }
-        // });
-
-
     });
 
     // Sets Player name to be what it was entered as on Home Page
@@ -288,7 +257,7 @@ $(document).ready(function () {
         }
         console.log("Player Name set to " + playerName);
 
-        $("#playerName").html(playerName);
+        $("#pName").html(playerName);
 
     }
 
@@ -377,8 +346,9 @@ $(document).ready(function () {
            $("#frontPageOuterWrapper").fadeIn(500);
        });
 
-
     }
+
+    // End Game and create
 
 
 

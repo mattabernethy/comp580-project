@@ -49,7 +49,13 @@
                 </div>
             </div>
 
-            <div id="playerWrapper">
+            <div class="healthWrapper" id="pWrapper">
+                <div class="healthWrapper" id="pHealthWrapper">
+                    <p class="healthName" id="pName">Your Name</p>
+                        <progress class="healthBar" id="pHealthBar" value="100" max="100"></progress>
+                        <div class="healthCounter" id="pHealthCounter">Health: 100/100</div>
+                </div>
+
                 <div id="mathWrapper">
                     <div id="question">
                         <p>(6 + 8) * 3</p>
@@ -66,34 +72,19 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="healthWrapper" id="playerHealth">
-                    <p class="healthName" id="playerName">Your Name</p>
-                    <div class="hearts" id="playerHearts">
-                        <img src="assets/fullHeart.svg" class="pHeart">
-                        <img src="assets/fullHeart.svg" class="pHeart">
-                        <img src="assets/fullHeart.svg" class="pHeart">
-                    </div>
-                </div>
             </div>
 
-            <div id="enemyWrapper">
-                <div class="healthWrapper" id="enemyHealth">
-                    <p class="healthName">Enemy Name</p>
-                    <div class="hearts" id="enemyHearts">
-                        <img src="assets/fullHeart.svg" class="eHart">
-                        <img src="assets/fullHeart.svg" class="eHeart">
-                        <img src="assets/fullHeart.svg" class="eHeart">
-                        <img src="assets/fullHeart.svg" class="eHeart">
-                    </div>
+            <div class = "healthWrapper" id="eWrapper">
+                <div class="healthWrapper" id="eHealthWrapper">
+                    <p class="healthName" id="eName">Enemy Name</p>
+                        <progress class="healthBar" id="eHealthBar" value="40" max="40"></progress>
+                        <div class="healthCounter" id="eHealthCounter">Health: 40/40</div>
                 </div>
 
                 <div id="imageWrapper">
                     <img src="assets/golem.svg" id="enemyPic">
                 </div>
             </div>
-
-
 
             <div id = "comboWrapper">
                 <span id="comboNumber">Combo x4!</span>
