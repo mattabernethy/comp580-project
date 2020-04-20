@@ -4,10 +4,11 @@ $(document).ready(function () {
     let world = "addition";   // The theme for each world
     let streak = 0;
     let correctAns;
-    let playerHealth = $("#pHealthBar").val();
-    let monsterHealth = $("#eHealthBar").val();;
-     let playerAttack = 10;
+    let playerAttack = 10;
     let playerName = "Player";
+    let playerHealth;
+    let monsterHealth;
+    let level;
     let frontPage = $("#frontPageWrapper").html();
     let battlePage = $("#battlePageWrapper").html();
 
@@ -32,16 +33,19 @@ $(document).ready(function () {
     };
 
     function playerTakesDamage() {
-        streak = 0;
-        playerHealth -= 10;
+        if(playerHealth > 0){
+            streak = 0;
+            playerHealth -= 10;
 
-        if(playerHealth === 0){
-            endGame();
+            // If the player's health is zero, then end the game
+            if(playerHealth === 0){
+                endGame();
+            }
+
+            $("#pHealthBar").val(playerHealth);
+            $("#pHealthCounter").html("Health: " + playerHealth + "/100")
+            console.log("You take damage. Your health is now " + playerHealth);
         }
-
-        $("#pHealthBar").val(playerHealth);
-        $("#pHealthCounter").html("Health: " + playerHealth + "/100")
-        console.log("You take damage. Your health is now " + playerHealth);
     };
 
     function generateQuestion() {
@@ -245,6 +249,8 @@ $(document).ready(function () {
             generateQuestion();
             generateQuestionTimer();
             setName();
+            resetHealth();
+            level = 1;
             $("#battlePageOuterWrapper").fadeIn("slow");
 
         });
@@ -333,11 +339,10 @@ $(document).ready(function () {
         $(this).addClass("focused");
     });
 
-    // Return to front page when you click the left hand corner title
-    $(document).on("click", "#battleLogo", function () {
+    // Return to front page when you click the left hand corner title or the home button
+    $(document).on("click", "#battleLogo, #homeButton", function () {
         stopQuestionTimer()
         generateFrontPage();
-
     });
 
     // Generate the Front Page
@@ -348,7 +353,46 @@ $(document).ready(function () {
 
     }
 
-    // End Game and create
+    // End Game and create end page
+    function endGame(){
+        $("#battlePageOuterWrapper").fadeOut(500, function(){
+            $("#score").html("You made it to Level " + 1);
+            $("#endPageOuterWrapper").fadeIn(500);
+        });
+    }
+
+    //when you click the replay button, replay the game
+    $(document).on("click", "#replayButton", function () {
+        replayGame();
+    })
+
+    //rebuild game on difficulty you had previously set
+    function replayGame(){
+        $("#frontPageOuterWrapper").fadeOut(500, function () {
+            playerName = $("#nameInput").val();
+            resetHealth();
+            updateStreak();
+            generateQuestion();
+            generateQuestionTimer();
+            setName();
+            level = 1;
+            $("#levelCounter").html("Level 1");
+            $("#battlePageOuterWrapper").fadeIn("slow");
+
+        });
+    }
+
+    //resets Health for player and monster
+    function resetHealth(){
+        $("#pHealthBar").val(100);
+        $("#eHealthBar").val(40);
+        playerHealth = $("#pHealthBar").val();
+        monsterHealth = $("#eHealthBar").val();
+        $("#pHealthCounter").html("Health: " + playerHealth + "/100")
+        $("#eHealthCounter").html("Health: " + monsterHealth + "/40")
+    }
+
+
 
 
 
