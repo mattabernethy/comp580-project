@@ -54,7 +54,7 @@ $(document).ready(function () {
         }
     };
 
-
+  
     function playerTakesDamage() {
         if(playerHealth > 0){
             streak = 0;
@@ -402,7 +402,6 @@ $(document).ready(function () {
        $("#battlePageOuterWrapper").fadeOut(500, function(){
            $("#frontPageOuterWrapper").fadeIn(500);
        });
-
     }
 
     // End Game and create end page
@@ -450,7 +449,19 @@ $(document).ready(function () {
         $("#levelCounter").html("Level " + level);
     }
 
+    }
 
+    // Create Instructions Overlay
+    $(document).on("click", "#instructionsButton", function(){
+        console.log("Pressed Instructions Button");
+       $("#instructionsOuterWrapper").css("display", "flex");
+    });
 
+    // Remove Instructions Overlay
+    $(document).on("click", "#instructionsReturnButton", function(){
+        console.log("Pressed Instructions Button");
+
+        $("#instructionsOuterWrapper").css("display", "none");
+    });
 
 });
