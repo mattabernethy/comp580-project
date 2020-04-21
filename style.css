@@ -118,7 +118,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: 20vh;
+    margin-left: 30vh;
 }
 
 #levelCounter{
@@ -179,9 +179,9 @@
     justify-content: flex-end;
 }
 
-#enemyPic{
+#ePic{
     margin-top: 2vh;
-    width: 37vh;
+    width: 35vh;
     height: auto;
 }
 

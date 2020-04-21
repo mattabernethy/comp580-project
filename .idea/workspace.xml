@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed1128d8-1858-4a4e-a4ad-2f599bb5bb86" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/additionApparition.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/divisionDemon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/multiplicationMummy.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/subtractionSerpent.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/emptyHeart.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/fullHeart.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/battle.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/script.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
@@ -32,7 +39,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -42,6 +49,14 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\matta\AppData\Roaming\npm\node_modules\prettier" />
     <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\matta\OneDrive\Documents\GitHub\comp580-project\assets" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\matta\OneDrive\Documents\GitHub\comp580-project\assets" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -94,6 +109,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="4851" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1587426608963">
+      <screen x="3840" y="0" width="2560" height="1400" />
+    </state>
+    <state x="4851" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/3840.0.2560.1400/0.0.2560.1400@3840.0.2560.1400" timestamp="1587426608963" />
     <state x="4622" y="346" key="SettingsEditor" timestamp="1587415905819">
       <screen x="3840" y="0" width="2560" height="1400" />
     </state>

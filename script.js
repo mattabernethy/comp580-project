@@ -8,7 +8,9 @@ $(document).ready(function () {
     let playerName = "Player";
     let playerHealth;
     let monsterHealth;
+    let maxMonsterHealth = 40;
     let level;
+    let questionType = 0;
     let frontPage = $("#frontPageWrapper").html();
     let battlePage = $("#battlePageWrapper").html();
 
@@ -16,21 +18,42 @@ $(document).ready(function () {
     setName();
 
     function monsterTakesDamage() {
-        streak += 1;
+        if(monsterHealth > 0){
+            streak += 1;
 
-        if (streak >= 4) {
-            playerAttack = 20;
-        } else {
-            playerAttack = 10;
+            if (streak >= 4) {
+                playerAttack = 20;
+            } else {
+                playerAttack = 10;
+            }
+
+            monsterHealth -= playerAttack;
+
+            if(monsterHealth <= 0){
+                //gets random type of monster
+                let temp = Math.floor(Math.random() * 4);
+
+                //look until you find a different monster
+                while(temp===questionType){
+                    temp = Math.floor(Math.random() * 4);
+                }
+
+                questionType = temp;
+
+                updateLevel();
+                maxMonsterHealth += 5
+                monsterHealth = maxMonsterHealth;
+            }
+
+            $("#eHealthBar").val(monsterHealth);
+            $("#eHealthCounter").html("Health: " + monsterHealth + "/" + maxMonsterHealth)
+
+
+            console.log("Monster takes damage!");
+            console.log("Monster health remaining: " + monsterHealth);
         }
-
-        monsterHealth -= playerAttack;
-        $("#eHealthBar").val(monsterHealth);
-        $("#eHealthCounter").html("Health: " + monsterHealth + "/40")
-
-        console.log("Monster takes damage!");
-        console.log("Monster health remaining: " + monsterHealth);
     };
+
 
     function playerTakesDamage() {
         if(playerHealth > 0){
@@ -49,27 +72,36 @@ $(document).ready(function () {
     };
 
     function generateQuestion() {
-        if (world === "addition") {
+        // if (world === "addition") {
+        //     generateAddQuestion();
+        // } else if (world === "subtraction") {
+        //     generateSubQuestion();
+        // } else if (world === "multiplication") {
+        //     generateMultQuestion();
+        // } else if (world === "division") {
+        //     generateDivQuestion();
+        // } else {  // mixed math final boss
+        //     // Returns random integer 0, 1, 2, or 3
+        //     const questionType = Math.floor(Math.random() * 4);
+        //
+        //     if (questionType === 0) {
+        //         generateAddQuestion();
+        //     } else if (questionType === 1) {
+        //         generateSubQuestion();
+        //     } else if (questionType === 2) {
+        //         generateMultQuestion();
+        //     } else {  // questionType == 3
+        //         generateDivQuestion();
+        //     }
+        // }
+        if (questionType === 0) {
             generateAddQuestion();
-        } else if (world === "subtraction") {
+        } else if (questionType === 1) {
             generateSubQuestion();
-        } else if (world === "multiplication") {
+        } else if (questionType === 2) {
             generateMultQuestion();
-        } else if (world === "division") {
+        } else {  // questionType == 3
             generateDivQuestion();
-        } else {  // mixed math final boss
-            // Returns random integer 0, 1, 2, or 3
-            const questionType = Math.floor(Math.random() * 4);
-
-            if (questionType === 0) {
-                generateAddQuestion();
-            } else if (questionType === 1) {
-                generateSubQuestion();
-            } else if (questionType === 2) {
-                generateMultQuestion();
-            } else {  // questionType == 3
-                generateDivQuestion();
-            }
         }
 
         // Calculates correct answer of current question
@@ -84,7 +116,15 @@ $(document).ready(function () {
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " + " + rightNum;
         $("#question").find("p").text(equation);
+        let name = "Addition Apparition";
+        let imageURL = "assets/additionApparition.svg"
+        generateMonster(name, imageURL);
     };
+
+    function generateMonster(name, imageURL){
+        $("#eName").html(name);
+        $("#ePic").attr("src", imageURL);
+    }
 
     function generateSubQuestion() {
         let leftNum = Math.floor(Math.random() * 10) + 1;
@@ -98,6 +138,10 @@ $(document).ready(function () {
 
         const equation = leftNum + " - " + rightNum;
         $("#question").find("p").text(equation);
+
+        let name = "SubtractionSerpent";
+        let imageURL = "assets/subtractionSerpent.svg"
+        generateMonster(name, imageURL);
     }
 
     function generateMultQuestion() {
@@ -105,6 +149,10 @@ $(document).ready(function () {
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " * " + rightNum;
         $("#question").find("p").text(equation);
+
+        let name = "Multiplication Mummy";
+        let imageURL = "assets/multiplicationMummy.svg"
+        generateMonster(name, imageURL);
     }
 
     function generateDivQuestion() {
@@ -121,6 +169,10 @@ $(document).ready(function () {
 
         const equation = leftNum + " / " + rightNum;
         $("#question").find("p").text(equation);
+
+        let name = "Division Demon";
+        let imageURL = "assets/divisionDemon.svg"
+        generateMonster(name, imageURL);
     }
 
     // Input (nothing), Output (void: generates 1 correct answer and 2 random incorrect answers on screen)
@@ -356,7 +408,7 @@ $(document).ready(function () {
     // End Game and create end page
     function endGame(){
         $("#battlePageOuterWrapper").fadeOut(500, function(){
-            $("#score").html("You made it to Level " + 1);
+            $("#score").html("You made it to Level " + level);
             $("#endPageOuterWrapper").fadeIn(500);
         });
     }
@@ -392,6 +444,11 @@ $(document).ready(function () {
         $("#eHealthCounter").html("Health: " + monsterHealth + "/40")
     }
 
+    //updates Level
+    function updateLevel(){
+        level++;
+        $("#levelCounter").html("Level " + level);
+    }
 
 
 
