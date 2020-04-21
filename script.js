@@ -4,10 +4,13 @@ $(document).ready(function () {
     let world = "addition";   // The theme for each world
     let streak = 0;
     let correctAns;
-    let playerHealth = 3;
-    let monsterHealth = 4;
-    let playerAttack = 1;
+    let playerAttack = 10;
     let playerName = "Player";
+    let playerHealth;
+    let monsterHealth;
+    let maxMonsterHealth = 40;
+    let level;
+    let questionType = 0;
     let frontPage = $("#frontPageWrapper").html();
     let battlePage = $("#battlePageWrapper").html();
 
@@ -15,48 +18,90 @@ $(document).ready(function () {
     setName();
 
     function monsterTakesDamage() {
-        streak += 1;
+        if(monsterHealth > 0){
+            streak += 1;
 
-        if (streak >= 4) {
-            playerAttack = 2;
-        } else {
-            playerAttack = 1;
+            if (streak >= 4) {
+                playerAttack = 20;
+            } else {
+                playerAttack = 10;
+            }
+
+            monsterHealth -= playerAttack;
+
+            if(monsterHealth <= 0){
+                //gets random type of monster
+                let temp = Math.floor(Math.random() * 4);
+
+                //look until you find a different monster
+                while(temp===questionType){
+                    temp = Math.floor(Math.random() * 4);
+                }
+
+                questionType = temp;
+
+                updateLevel();
+                maxMonsterHealth += 5
+                monsterHealth = maxMonsterHealth;
+            }
+
+            $("#eHealthBar").val(monsterHealth);
+            $("#eHealthCounter").html("Health: " + monsterHealth + "/" + maxMonsterHealth)
+
+
+            console.log("Monster takes damage!");
+            console.log("Monster health remaining: " + monsterHealth);
         }
-
-        monsterHealth -= playerAttack;
-        console.log("Monster takes damage!");
-        console.log("Monster health remaining: " + monsterHealth);
     };
 
+  
     function playerTakesDamage() {
-        streak = 0;
-        playerHealth -= 1;
-        console.log("You take damage.");
-        console.log("Your health remaining: " + playerHealth);
+        if(playerHealth > 0){
+            streak = 0;
+            playerHealth -= 10;
+
+            // If the player's health is zero, then end the game
+            if(playerHealth === 0){
+                endGame();
+            }
+
+            $("#pHealthBar").val(playerHealth);
+            $("#pHealthCounter").html("Health: " + playerHealth + "/100")
+            console.log("You take damage. Your health is now " + playerHealth);
+        }
     };
 
     function generateQuestion() {
-        if (world === "addition") {
+        // if (world === "addition") {
+        //     generateAddQuestion();
+        // } else if (world === "subtraction") {
+        //     generateSubQuestion();
+        // } else if (world === "multiplication") {
+        //     generateMultQuestion();
+        // } else if (world === "division") {
+        //     generateDivQuestion();
+        // } else {  // mixed math final boss
+        //     // Returns random integer 0, 1, 2, or 3
+        //     const questionType = Math.floor(Math.random() * 4);
+        //
+        //     if (questionType === 0) {
+        //         generateAddQuestion();
+        //     } else if (questionType === 1) {
+        //         generateSubQuestion();
+        //     } else if (questionType === 2) {
+        //         generateMultQuestion();
+        //     } else {  // questionType == 3
+        //         generateDivQuestion();
+        //     }
+        // }
+        if (questionType === 0) {
             generateAddQuestion();
-        } else if (world === "subtraction") {
+        } else if (questionType === 1) {
             generateSubQuestion();
-        } else if (world === "multiplication") {
+        } else if (questionType === 2) {
             generateMultQuestion();
-        } else if (world === "division") {
+        } else {  // questionType == 3
             generateDivQuestion();
-        } else {  // mixed math final boss
-            // Returns random integer 0, 1, 2, or 3
-            const questionType = Math.floor(Math.random() * 4);
-
-            if (questionType === 0) {
-                generateAddQuestion();
-            } else if (questionType === 1) {
-                generateSubQuestion();
-            } else if (questionType === 2) {
-                generateMultQuestion();
-            } else {  // questionType == 3
-                generateDivQuestion();
-            }
         }
 
         // Calculates correct answer of current question
@@ -71,7 +116,15 @@ $(document).ready(function () {
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " + " + rightNum;
         $("#question").find("p").text(equation);
+        let name = "Addition Apparition";
+        let imageURL = "assets/additionApparition.svg"
+        generateMonster(name, imageURL);
     };
+
+    function generateMonster(name, imageURL){
+        $("#eName").html(name);
+        $("#ePic").attr("src", imageURL);
+    }
 
     function generateSubQuestion() {
         let leftNum = Math.floor(Math.random() * 10) + 1;
@@ -85,6 +138,10 @@ $(document).ready(function () {
 
         const equation = leftNum + " - " + rightNum;
         $("#question").find("p").text(equation);
+
+        let name = "SubtractionSerpent";
+        let imageURL = "assets/subtractionSerpent.svg"
+        generateMonster(name, imageURL);
     }
 
     function generateMultQuestion() {
@@ -92,6 +149,10 @@ $(document).ready(function () {
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " * " + rightNum;
         $("#question").find("p").text(equation);
+
+        let name = "Multiplication Mummy";
+        let imageURL = "assets/multiplicationMummy.svg"
+        generateMonster(name, imageURL);
     }
 
     function generateDivQuestion() {
@@ -108,6 +169,10 @@ $(document).ready(function () {
 
         const equation = leftNum + " / " + rightNum;
         $("#question").find("p").text(equation);
+
+        let name = "Division Demon";
+        let imageURL = "assets/divisionDemon.svg"
+        generateMonster(name, imageURL);
     }
 
     // Input (nothing), Output (void: generates 1 correct answer and 2 random incorrect answers on screen)
@@ -214,7 +279,7 @@ $(document).ready(function () {
 
         $(".chosenAnswer").removeClass("chosenAnswer");
 
-        const isCorrect = (yourAns === correctAns);
+        const isCorrect = (yourAns == correctAns);
         // If correct, monster takes damage. If incorrect, you take damage.
         if (isCorrect) {
             monsterTakesDamage();
@@ -222,7 +287,6 @@ $(document).ready(function () {
             playerTakesDamage();
         }
     };
-
 
 
     // Transitions to battle page upon clicking a difficulty on main menu
@@ -237,48 +301,11 @@ $(document).ready(function () {
             generateQuestion();
             generateQuestionTimer();
             setName();
+            resetHealth();
+            level = 1;
             $("#battlePageOuterWrapper").fadeIn("slow");
 
         });
-
-
-
-
-
-
-
-
-
-        // Turn frontPageWrapper from index.html into battlePageWrapper from battle.html
-        // $.ajax({
-        //     url: "battle.html",
-        //     success: function (data) {
-        //
-        //         playerName = $("#nameInput").val();
-        //
-        //         $("#frontPageWrapper").fadeOut(250, function () {
-        //             // Get only the html underneath #battlePageWrapper
-        //             const newPage = $(data).filter("#battlePageWrapper").html();
-        //
-        //             // Set HTML of #frontPageWrapper to HTML underneath #battlePageWrapper
-        //             $("#frontPageWrapper").html(newPage);
-        //
-        //             // Change id of frontPageWraper to battlePageWrapper
-        //             $("#frontPageWrapper").attr("id", "battlePageWrapper");
-        //
-        //             // Generate first question and its answer choices
-        //             updateStreak();
-        //             generateQuestion();
-        //             generateQuestionTimer();
-        //
-        //             $("#battlePageWrapper").fadeIn(250);
-        //
-        //             setName();
-        //         });
-        //     }
-        // });
-
-
     });
 
     // Sets Player name to be what it was entered as on Home Page
@@ -288,7 +315,7 @@ $(document).ready(function () {
         }
         console.log("Player Name set to " + playerName);
 
-        $("#playerName").html(playerName);
+        $("#pName").html(playerName);
 
     }
 
@@ -364,11 +391,10 @@ $(document).ready(function () {
         $(this).addClass("focused");
     });
 
-    // Return to front page when you click the left hand corner title
-    $(document).on("click", "#battleLogo", function () {
+    // Return to front page when you click the left hand corner title or the home button
+    $(document).on("click", "#battleLogo, #homeButton", function () {
         stopQuestionTimer()
         generateFrontPage();
-
     });
 
     // Generate the Front Page
@@ -376,6 +402,52 @@ $(document).ready(function () {
        $("#battlePageOuterWrapper").fadeOut(500, function(){
            $("#frontPageOuterWrapper").fadeIn(500);
        });
+    }
+
+    // End Game and create end page
+    function endGame(){
+        $("#battlePageOuterWrapper").fadeOut(500, function(){
+            $("#score").html("You made it to Level " + level);
+            $("#endPageOuterWrapper").fadeIn(500);
+        });
+    }
+
+    //when you click the replay button, replay the game
+    $(document).on("click", "#replayButton", function () {
+        replayGame();
+    })
+
+    //rebuild game on difficulty you had previously set
+    function replayGame(){
+        $("#frontPageOuterWrapper").fadeOut(500, function () {
+            playerName = $("#nameInput").val();
+            resetHealth();
+            updateStreak();
+            generateQuestion();
+            generateQuestionTimer();
+            setName();
+            level = 1;
+            $("#levelCounter").html("Level 1");
+            $("#battlePageOuterWrapper").fadeIn("slow");
+
+        });
+    }
+
+    //resets Health for player and monster
+    function resetHealth(){
+        $("#pHealthBar").val(100);
+        $("#eHealthBar").val(40);
+        playerHealth = $("#pHealthBar").val();
+        monsterHealth = $("#eHealthBar").val();
+        $("#pHealthCounter").html("Health: " + playerHealth + "/100")
+        $("#eHealthCounter").html("Health: " + monsterHealth + "/40")
+    }
+
+    //updates Level
+    function updateLevel(){
+        level++;
+        $("#levelCounter").html("Level " + level);
+    }
 
     }
 
@@ -391,7 +463,5 @@ $(document).ready(function () {
 
         $("#instructionsOuterWrapper").css("display", "none");
     });
-
-
 
 });

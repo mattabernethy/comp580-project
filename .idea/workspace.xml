@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed1128d8-1858-4a4e-a4ad-2f599bb5bb86" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/additionApparition.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/divisionDemon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/multiplicationMummy.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/subtractionSerpent.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
@@ -23,10 +27,14 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1Yb351yUSBO2Nl5Vr4n62Am6pCJ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -35,7 +43,15 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\matta\AppData\Roaming\npm\node_modules\prettier" />
-    <property name="settings.editor.selected.configurable" value="settings.xslt" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\matta\OneDrive\Documents\GitHub\comp580-project\assets" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\matta\OneDrive\Documents\GitHub\comp580-project\assets" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -52,12 +68,15 @@
       <workItem from="1583779273360" duration="2584000" />
       <workItem from="1586903066179" duration="23000" />
       <workItem from="1586903090161" duration="9258000" />
+      <workItem from="1587415477707" duration="35000" />
+      <workItem from="1587415665944" duration="13000" />
+      <workItem from="1587415692146" duration="5830000" />
       <workItem from="1586965297873" duration="3921000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -84,5 +103,15 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="4851" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1587426608963">
+      <screen x="3840" y="0" width="2560" height="1400" />
+    </state>
+    <state x="4851" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/3840.0.2560.1400/0.0.2560.1400@3840.0.2560.1400" timestamp="1587426608963" />
+    <state x="4622" y="346" key="SettingsEditor" timestamp="1587415905819">
+      <screen x="3840" y="0" width="2560" height="1400" />
+    </state>
+    <state x="4622" y="346" key="SettingsEditor/3840.0.2560.1400/0.0.2560.1400@3840.0.2560.1400" timestamp="1587415905819" />
   </component>
 </project>

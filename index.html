@@ -73,12 +73,18 @@
                 </div>
 
                 <div id="levelWrapper">
-                    <div id="levelCounter">World 1 - Stage 1</div>
+                    <div id="levelCounter">Level 1</div>
                     <div id="countdown">BATTLE!</div>
                 </div>
             </div>
 
-            <div id="playerWrapper">
+            <div class="healthWrapper" id="pWrapper">
+                <div class="healthWrapper" id="pHealthWrapper">
+                    <p class="healthName" id="pName">Your Name</p>
+                        <progress class="healthBar" id="pHealthBar" value="100" max="100"></progress>
+                        <div class="healthCounter" id="pHealthCounter">Health: 100/100</div>
+                </div>
+
                 <div id="mathWrapper">
                     <div id="question">
                         <p>(6 + 8) * 3</p>
@@ -95,34 +101,19 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="healthWrapper" id="playerHealth">
-                    <p class="healthName" id="playerName">Your Name</p>
-                    <div class="hearts" id="playerHearts">
-                        <img src="assets/fullHeart.svg" class="pHeart">
-                        <img src="assets/fullHeart.svg" class="pHeart">
-                        <img src="assets/fullHeart.svg" class="pHeart">
-                    </div>
-                </div>
             </div>
 
-            <div id="enemyWrapper">
-                <div class="healthWrapper" id="enemyHealth">
-                    <p class="healthName">Enemy Name</p>
-                    <div class="hearts" id="enemyHearts">
-                        <img src="assets/fullHeart.svg" class="eHart">
-                        <img src="assets/fullHeart.svg" class="eHeart">
-                        <img src="assets/fullHeart.svg" class="eHeart">
-                        <img src="assets/fullHeart.svg" class="eHeart">
-                    </div>
+            <div class = "healthWrapper" id="eWrapper">
+                <div class="healthWrapper" id="eHealthWrapper">
+                    <p class="healthName" id="eName">Enemy Name</p>
+                        <progress class="healthBar" id="eHealthBar" value="40" max="40"></progress>
+                        <div class="healthCounter" id="eHealthCounter">Health: 40/40</div>
                 </div>
 
                 <div id="imageWrapper">
-                    <img src="assets/golem.svg" id="enemyPic">
+                    <img src="assets/subtractionSerpent.svg" id="ePic">
                 </div>
             </div>
-
-
 
             <div id = "comboWrapper">
                 <span id="comboNumber">Combo x4!</span>
@@ -138,6 +129,17 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <div class='f1' id="endPageOuterWrapper">
+        <div id="endPageWrapper">
+            <div id="endHeader">You Lost!</div>
+            <div id="score"></div>
+            <div class = "endButton" id="replayButton"><p>Replay</p></div>
+            <div class = "endButton" id="homeButton"><p>Home</p></div>
+        </div>
+
     </div>
 
 
