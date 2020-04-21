@@ -377,8 +377,20 @@ $(document).ready(function () {
            $("#frontPageOuterWrapper").fadeIn(500);
        });
 
-
     }
+
+    // Create Instructions Overlay
+    $(document).on("click", "#instructionsButton", function(){
+        console.log("Pressed Instructions Button");
+       $("#instructionsOuterWrapper").css("display", "flex");
+    });
+
+    // Remove Instructions Overlay
+    $(document).on("click", "#instructionsReturnButton", function(){
+        console.log("Pressed Instructions Button");
+
+        $("#instructionsOuterWrapper").css("display", "none");
+    });
 
 
 
