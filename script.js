@@ -452,8 +452,6 @@ $(document).ready(function () {
         $("#levelCounter").html("Level " + level);
     }
 
-    
-
     // Create Instructions Overlay
     $(document).on("click", "#instructionsButton", function(){
         console.log("Pressed Instructions Button");
