@@ -14,11 +14,81 @@ $(document).ready(function () {
     let frontPage = $("#frontPageWrapper").html();
     let battlePage = $("#battlePageWrapper").html();
 
+    // Initializes focusable buttons on main menu
+    $("#midSection").children().addClass("focusable");
+
+    // Initialize text-to-speech below
+    voices = [
+        {
+            "name": "Alex",
+            "lang": "en-US"
+        },
+        {
+            "name": "Daniel",
+            "lang": "en-GB"
+        },
+        {
+            "name": "Fiona",
+            "lang": "en"
+        },
+        {
+            "name": "Fred",
+            "lang": "en-US"
+        },
+        {
+            "name": "Karen",
+            "lang": "en-AU"
+        },
+        {
+            "name": "Moira",
+            "lang": "en-IE"
+        },
+        {
+            "name": "Samantha",
+            "lang": "en-US"
+        },
+        {
+            "name": "Tessa",
+            "lang": "en-ZA"
+        },
+        {
+            "name": "Veena",
+            "lang": "en-IN"
+        },
+        {
+            "name": "Victoria",
+            "lang": "en-US"
+        }
+    ];
+
+    const voice1 = voices[1];
+    const voice2 = voices[0];
+    console.log(`Voice 1: ${voice1.name} Voice 2: ${voice2.name}`);
+
+    let narrator1 = new SpeechSynthesisUtterance();
+    narrator1.volume = 1; // 0 to 1
+    narrator1.rate = 1; // 0.1 to 10
+    narrator1.pitch = 1; // 0 to 2      
+    narrator1.voiceURI = voice1.name;
+    narrator1.lang = voice1.lang;
+    // narrator1.text  = "Gorilla is back";
+
+    let narrator2 = new SpeechSynthesisUtterance();
+    narrator2.volume = 1; // 0 to 1
+    narrator2.rate = 1; // 0.1 to 10
+    narrator2.pitch = 1; // 0 to 2      
+    narrator2.voiceURI = voice2.name;
+    narrator2.lang = voice2.lang;
+    // narrator2.text = "Dino is back";
+
+
+
+
     // Sets default Player Name to be "Player"
     setName();
 
     function monsterTakesDamage() {
-        if(monsterHealth > 0){
+        if (monsterHealth > 0) {
             streak += 1;
 
             if (streak >= 4) {
@@ -29,12 +99,12 @@ $(document).ready(function () {
 
             monsterHealth -= playerAttack;
 
-            if(monsterHealth <= 0){
+            if (monsterHealth <= 0) {
                 //gets random type of monster
                 let temp = Math.floor(Math.random() * 4);
 
                 //look until you find a different monster
-                while(temp===questionType){
+                while (temp === questionType) {
                     temp = Math.floor(Math.random() * 4);
                 }
 
@@ -54,14 +124,14 @@ $(document).ready(function () {
         }
     };
 
-  
+
     function playerTakesDamage() {
-        if(playerHealth > 0){
+        if (playerHealth > 0) {
             streak = 0;
             playerHealth -= 10;
 
             // If the player's health is zero, then end the game
-            if(playerHealth === 0){
+            if (playerHealth === 0) {
                 endGame();
             }
 
@@ -121,7 +191,7 @@ $(document).ready(function () {
         generateMonster(name, imageURL);
     };
 
-    function generateMonster(name, imageURL){
+    function generateMonster(name, imageURL) {
         $("#eName").html(name);
         $("#ePic").attr("src", imageURL);
         $("#eHealthBar").attr("max", maxMonsterHealth);
@@ -307,12 +377,15 @@ $(document).ready(function () {
             level = 1;
             $("#battlePageOuterWrapper").fadeIn("slow");
 
+            // Removes difficulty buttons from being focusable after battlepage loaded, adds focusable into answer choices
+            $(".focusable").removeClass("focusable focused");
+            $(".answerButton").addClass("focusable");
         });
     });
 
     // Sets Player name to be what it was entered as on Home Page
     function setName() {
-        if(playerName === ""){
+        if (playerName === "") {
             playerName = "Player";
         }
         console.log("Player Name set to " + playerName);
@@ -349,7 +422,7 @@ $(document).ready(function () {
                 $(".focused").removeClass("focused").prev(".focusable").addClass("focused");
             } else {
                 // Else select rightmost answer choice (there is no other choice to left of current choice)
-                $(".focused").removeClass("focused").siblings(":last").addClass("focused");
+                $(".focused").removeClass("focused").siblings(".focusable").last().addClass("focused");
             }
         }
 
@@ -363,26 +436,19 @@ $(document).ready(function () {
                 $(".focused").removeClass("focused").next(".focusable").addClass("focused");
             } else {
                 // Else select leftmost answer choice (there is no other choice to right of current choice)
-                $(".focused").removeClass("focused").siblings(":first").addClass("focused");
+                $(".focused").removeClass("focused").siblings(".focusable").first().addClass("focused");
             }
         }
 
-        // Submit answer choice currently selected with spacebar
+        // Submit answer choice (or currently focused button) currently selected with spacebar
         if (e.keyCode == 32) {
+            // Spacebar simulates a click event on focused item
+            $(".focused").click();
+        }
 
-            // Spacebar only submits answer if any one of the answer buttons is focused
-            if ($(".focusable").hasClass("focused")) {
-                stopQuestionTimer();    // Stop timer for current question
-
-                // Answer choice selected by spacebar is submitted
-                $(".focused").addClass("chosenAnswer");
-                submitAnswer();
-
-                // New question and corresponding answer choices
-                updateStreak();
-                generateQuestion();
-                generateQuestionTimer();
-            }
+        // Press Esc button to go back to main menu (only if main menu is not displayed)
+        if (e.keyCode == 27 && $("#frontPageOuterWrapper").is(":hidden")) {
+            $("#homeButton").click();
         }
     });
 
@@ -400,18 +466,28 @@ $(document).ready(function () {
     });
 
     // Generate the Front Page
-    function generateFrontPage(){
-       $("#battlePageOuterWrapper").fadeOut(500, function(){
-           $("#frontPageOuterWrapper").fadeIn(500);
-       });
+    function generateFrontPage() {
+        $("#battlePageOuterWrapper").fadeOut(500, function () {
+            $("#frontPageOuterWrapper").fadeIn(500);
+        });
+
+        // Removes answer choices from being focusable after loading back into main menu, adds focusable back into difficulty buttons
+        $(".focusable").removeClass("focusable focused");
+        $("#midSection").children().addClass("focusable");
     }
 
     // End Game and create end page
-    function endGame(){
-        $("#battlePageOuterWrapper").fadeOut(500, function(){
+    function endGame() {
+        stopQuestionTimer();
+
+        $("#battlePageOuterWrapper").fadeOut(500, function () {
             $("#score").html("You made it to Level " + level);
             $("#endPageOuterWrapper").fadeIn(500);
         });
+
+        // Removes answer choices from being focusable after losing game, adds focusable into replay and home buttons
+        $(".focusable").removeClass("focusable focused");
+        $(".endButton").addClass("focusable");
     }
 
     //when you click the replay button, replay the game
@@ -420,7 +496,7 @@ $(document).ready(function () {
     })
 
     //rebuild game on difficulty you had previously set
-    function replayGame(){
+    function replayGame() {
         $("#frontPageOuterWrapper").fadeOut(500, function () {
             playerName = $("#nameInput").val();
             resetHealth();
@@ -433,11 +509,14 @@ $(document).ready(function () {
             $("#levelCounter").html("Level 1");
             $("#battlePageOuterWrapper").fadeIn("slow");
 
+            // Adds focusable into answer buttons and removes focusable elsewhere
+            $(".focusable").removeClass("focusable focused");
+            $(".answerButton").addClass("focusable");
         });
     }
 
     //resets Health for player and monster
-    function resetHealth(){
+    function resetHealth() {
         $("#pHealthBar").val(100);
         $("#eHealthBar").val(40);
         playerHealth = $("#pHealthBar").val();
@@ -447,22 +526,30 @@ $(document).ready(function () {
     }
 
     //updates Level
-    function updateLevel(){
+    function updateLevel() {
         level++;
         $("#levelCounter").html("Level " + level);
     }
 
     // Create Instructions Overlay
-    $(document).on("click", "#instructionsButton", function(){
+    $(document).on("click", "#instructionsButton", function () {
         console.log("Pressed Instructions Button");
-       $("#instructionsOuterWrapper").css("display", "flex");
+        $("#instructionsOuterWrapper").css("display", "flex");
+
+        // Instantly adds focused status to instructions page back button, removes focusable elsewhere
+        $(".focusable").removeClass("focusable focused");
+        $("#instructionsReturnButton").addClass("focusable focused");
     });
 
     // Remove Instructions Overlay
-    $(document).on("click", "#instructionsReturnButton", function(){
+    $(document).on("click", "#instructionsReturnButton", function () {
         console.log("Pressed Instructions Button");
-
         $("#instructionsOuterWrapper").css("display", "none");
+
+        // Adds focusable back to main menu buttons, removes focusable elsewhere
+        $(".focusable").removeClass("focusable focused");
+        $("#midSection").children().addClass("focusable");
     });
 
 });
+
