@@ -124,6 +124,8 @@ $(document).ready(function () {
     function generateMonster(name, imageURL){
         $("#eName").html(name);
         $("#ePic").attr("src", imageURL);
+        $("#eHealthBar").attr("max", maxMonsterHealth);
+
     }
 
     function generateSubQuestion() {
@@ -427,6 +429,7 @@ $(document).ready(function () {
             generateQuestionTimer();
             setName();
             level = 1;
+            maxMonsterHealth = 40;
             $("#levelCounter").html("Level 1");
             $("#battlePageOuterWrapper").fadeIn("slow");
 
