@@ -11,11 +11,18 @@ $(document).ready(function () {
     let maxMonsterHealth = 40;
     let level;
     let questionType = 0;
+    let currentEquation = "";
     let frontPage = $("#frontPageWrapper").html();
     let battlePage = $("#battlePageWrapper").html();
 
     // Initializes focusable buttons on main menu
     $("#midSection").children().addClass("focusable");
+
+    // Initialize sounds
+    let buttonSwitchSound = new Audio("./assets/switch-button.mp3");
+    buttonSwitchSound.playbackRate = 2.0;
+
+    let buttonSelectSound = new Audio("./assets/select-button.mp3");
 
     // Initialize text-to-speech below
     voices = [
@@ -63,7 +70,6 @@ $(document).ready(function () {
 
     const voice1 = voices[1];
     const voice2 = voices[0];
-    console.log(`Voice 1: ${voice1.name} Voice 2: ${voice2.name}`);
 
     let narrator1 = new SpeechSynthesisUtterance();
     narrator1.volume = 1; // 0 to 1
@@ -71,7 +77,6 @@ $(document).ready(function () {
     narrator1.pitch = 1; // 0 to 2      
     narrator1.voiceURI = voice1.name;
     narrator1.lang = voice1.lang;
-    // narrator1.text  = "Gorilla is back";
 
     let narrator2 = new SpeechSynthesisUtterance();
     narrator2.volume = 1; // 0 to 1
@@ -79,10 +84,28 @@ $(document).ready(function () {
     narrator2.pitch = 1; // 0 to 2      
     narrator2.voiceURI = voice2.name;
     narrator2.lang = voice2.lang;
-    // narrator2.text = "Dino is back";
 
+    // Narrator speaks button text when triggered by a new focus
+    $(document).on("newFocus", function () {
+        narrator1.text = $(".focused").text();
 
+        // If newFocus is triggered while the narrator is still speaking, it cancels current utterance and all queued utterances
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        speechSynthesis.speak(narrator1);
+    });
 
+    // Repeats current math equation
+    $(document).on("repeatQuestion", function () {
+        if (currentEquation != "") {
+            narrator1.text = currentEquation;
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            speechSynthesis.speak(narrator1);
+        }
+    });
 
     // Sets default Player Name to be "Player"
     setName();
@@ -142,28 +165,7 @@ $(document).ready(function () {
     };
 
     function generateQuestion() {
-        // if (world === "addition") {
-        //     generateAddQuestion();
-        // } else if (world === "subtraction") {
-        //     generateSubQuestion();
-        // } else if (world === "multiplication") {
-        //     generateMultQuestion();
-        // } else if (world === "division") {
-        //     generateDivQuestion();
-        // } else {  // mixed math final boss
-        //     // Returns random integer 0, 1, 2, or 3
-        //     const questionType = Math.floor(Math.random() * 4);
-        //
-        //     if (questionType === 0) {
-        //         generateAddQuestion();
-        //     } else if (questionType === 1) {
-        //         generateSubQuestion();
-        //     } else if (questionType === 2) {
-        //         generateMultQuestion();
-        //     } else {  // questionType == 3
-        //         generateDivQuestion();
-        //     }
-        // }
+        
         if (questionType === 0) {
             generateAddQuestion();
         } else if (questionType === 1) {
@@ -178,6 +180,9 @@ $(document).ready(function () {
         correctAns = eval($("#question").find("p").text());
 
         generateAnswerChoices();
+
+        // Trigger narration of question
+        $(document).trigger("repeatQuestion");
     }
 
     // Input (nothing yet, maybe difficulty later?), Output (void: generates random addition question on screen)
@@ -185,6 +190,7 @@ $(document).ready(function () {
         const leftNum = Math.floor(Math.random() * 10) + 1;
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " + " + rightNum;
+        currentEquation = "What is " + leftNum + " plus " + rightNum + "?";
         $("#question").find("p").text(equation);
         let name = "Addition Apparition";
         let imageURL = "assets/additionApparition.svg"
@@ -209,6 +215,7 @@ $(document).ready(function () {
         }
 
         const equation = leftNum + " - " + rightNum;
+        currentEquation = "What is " + leftNum + " minus " + rightNum + "?";
         $("#question").find("p").text(equation);
 
         let name = "SubtractionSerpent";
@@ -220,6 +227,7 @@ $(document).ready(function () {
         const leftNum = Math.floor(Math.random() * 10) + 1;
         const rightNum = Math.floor(Math.random() * 10) + 1;
         const equation = leftNum + " * " + rightNum;
+        currentEquation = "What is " + leftNum + " times " + rightNum + "?";
         $("#question").find("p").text(equation);
 
         let name = "Multiplication Mummy";
@@ -240,6 +248,7 @@ $(document).ready(function () {
         }
 
         const equation = leftNum + " / " + rightNum;
+        currentEquation = "What is " + leftNum + " over " + rightNum + "?";
         $("#question").find("p").text(equation);
 
         let name = "Division Demon";
@@ -409,7 +418,6 @@ $(document).ready(function () {
         generateQuestionTimer();
     });
 
-
     // Interact with game with keyboard
     $(document).keydown(function (e) {
         // Sift through answer choices with left arrow key
@@ -424,6 +432,11 @@ $(document).ready(function () {
                 // Else select rightmost answer choice (there is no other choice to left of current choice)
                 $(".focused").removeClass("focused").siblings(".focusable").last().addClass("focused");
             }
+
+            // Triggers narration event
+            $(document).trigger("newFocus");
+            // Switch button sound (makes a nicer sound when cloned)
+            buttonSwitchSound.cloneNode().play();
         }
 
         // Sift through answer choices with right arrow key
@@ -438,10 +451,30 @@ $(document).ready(function () {
                 // Else select leftmost answer choice (there is no other choice to right of current choice)
                 $(".focused").removeClass("focused").siblings(".focusable").first().addClass("focused");
             }
+
+            // Triggers narration event
+            $(document).trigger("newFocus");
+            // Switch button sound (makes a nicer sound when cloned)
+            buttonSwitchSound.cloneNode().play();
+        }
+
+        // Down arrow key causes narrator to repeat text of currently focused button
+        if (e.keyCode == 40) {
+            $(document).trigger("newFocus");
+        }
+
+        // Up arrow causes narrator to repeat current math equation (only if on battle page)
+        if (e.keyCode == 38) {
+            $(document).trigger("repeatQuestion");
         }
 
         // Submit answer choice (or currently focused button) currently selected with spacebar
         if (e.keyCode == 32) {
+            // Select button sound (only triggers if something is currently focused)
+            if ($(".focused").length) {
+                buttonSelectSound.play();
+            }
+
             // Spacebar simulates a click event on focused item
             $(".focused").click();
         }
@@ -449,14 +482,24 @@ $(document).ready(function () {
         // Press Esc button to go back to main menu (only if main menu is not displayed)
         if (e.keyCode == 27 && $("#frontPageOuterWrapper").is(":hidden")) {
             $("#homeButton").click();
+
+            // Narrates "Returned to main menu" upon pressing Esc
+            narrator1.text = "Returned to main menu";
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                speechSynthesis.speak(narrator1);
         }
     });
 
 
-    // Focus answer choice on mouse hover
+    // Focus button on mouse hover
     $(document).on("mouseenter", ".focusable", function () {
         $(".focusable").removeClass("focused");
         $(this).addClass("focused");
+
+        // Triggers narration event
+        $(document).trigger("newFocus");
     });
 
     // Return to front page when you click the left hand corner title or the home button
@@ -471,6 +514,9 @@ $(document).ready(function () {
             $("#frontPageOuterWrapper").fadeIn(500);
         });
 
+        // Sets current equation to be narrated as empty string
+        currentEquation == "";
+
         // Removes answer choices from being focusable after loading back into main menu, adds focusable back into difficulty buttons
         $(".focusable").removeClass("focusable focused");
         $("#midSection").children().addClass("focusable");
@@ -484,6 +530,9 @@ $(document).ready(function () {
             $("#score").html("You made it to Level " + level);
             $("#endPageOuterWrapper").fadeIn(500);
         });
+
+        // Sets current equation to be narrated as empty string
+        currentEquation == "";
 
         // Removes answer choices from being focusable after losing game, adds focusable into replay and home buttons
         $(".focusable").removeClass("focusable focused");

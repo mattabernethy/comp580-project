@@ -45,7 +45,6 @@ body{
 }
 
 #instructionsButton:hover {
-    color:red;
     cursor: pointer;
 }
 
@@ -92,7 +91,6 @@ body{
 }
 
 .difficultyButton:hover{
-    color: red;
     cursor: pointer;
 }
 
@@ -172,7 +170,6 @@ body{
 }
 
 #instructionsReturnButton:hover{
-    color:red;
     cursor: pointer;
 }
 
@@ -428,7 +425,6 @@ body{
 }
 
 .endButton:hover{
-    color: red;
     cursor: pointer;
 }
 
