@@ -1,7 +1,6 @@
 $(document).ready(function () {
     let timer;  // Global question timer variable
     let difficulty;
-    let world = "addition";   // The theme for each world
     let streak = 0;
     let correctAns;
     let playerAttack = 10;
@@ -12,11 +11,10 @@ $(document).ready(function () {
     let level;
     let questionType = 0;
     let currentEquation = "";
-    let frontPage = $("#frontPageWrapper").html();
-    let battlePage = $("#battlePageWrapper").html();
+    let currentPage = "homePage";   // homePage, instructionsPage, battlePage, gameOverPage
 
     // Initializes focusable buttons on main menu
-    $("#midSection").children().addClass("focusable");
+    $("#midSection").children(":not(#nameInputWrapper)").addClass("focusable");
 
     // Initialize sounds
     let buttonSwitchSound = new Audio("./assets/switch-button.mp3");
@@ -85,27 +83,37 @@ $(document).ready(function () {
     narrator2.voiceURI = voice2.name;
     narrator2.lang = voice2.lang;
 
-    // Narrator speaks button text when triggered by a new focus
-    $(document).on("newFocus", function () {
+    // Narrates the button currently focused
+    function narrateFocusButton() {
         narrator1.text = $(".focused").text();
 
-        // If newFocus is triggered while the narrator is still speaking, it cancels current utterance and all queued utterances
+        // If narrateFocusButton is triggered while the narrator is still speaking, it cancels current utterance and all queued utterances
         if (speechSynthesis.speaking) {
             speechSynthesis.cancel();
         }
         speechSynthesis.speak(narrator1);
-    });
+    }
 
-    // Repeats current math equation
-    $(document).on("repeatQuestion", function () {
-        if (currentEquation != "") {
+    // Narrates relevant information on current page
+    function narrateCurrentPage() {
+        console.log(currentPage);
+
+        if (currentPage == "homePage") {
+            narrator1.text = "Choose your difficulty"
+        } else if (currentPage == "instructionsPage") {
+            narrator1.text = $("#instructionHeaderWrapper").text() + " " + $("#instructionsContent").text();
+        } else if (currentPage == "battlePage") {
             narrator1.text = currentEquation;
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-            }
-            speechSynthesis.speak(narrator1);
+        } else {    // gameOverPage
+            narrator1.text = "You Lost! You made it to level " + level;
         }
-    });
+
+        // Immediately cancels any current or queued speech, then talks
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        speechSynthesis.speak(narrator1);
+    }
 
     // Sets default Player Name to be "Player"
     setName();
@@ -154,7 +162,7 @@ $(document).ready(function () {
             playerHealth -= 10;
 
             // If the player's health is zero, then end the game
-            if (playerHealth === 0) {
+            if (playerHealth <= 0) {
                 endGame();
             }
 
@@ -165,7 +173,7 @@ $(document).ready(function () {
     };
 
     function generateQuestion() {
-        
+
         if (questionType === 0) {
             generateAddQuestion();
         } else if (questionType === 1) {
@@ -176,13 +184,7 @@ $(document).ready(function () {
             generateDivQuestion();
         }
 
-        // Calculates correct answer of current question
-        correctAns = eval($("#question").find("p").text());
-
         generateAnswerChoices();
-
-        // Trigger narration of question
-        $(document).trigger("repeatQuestion");
     }
 
     // Input (nothing yet, maybe difficulty later?), Output (void: generates random addition question on screen)
@@ -209,7 +211,7 @@ $(document).ready(function () {
         let rightNum = Math.floor(Math.random() * 10) + 1;
 
         // Makes sure the answer is non-negative
-        if (leftNum < rightNum) {
+        while (leftNum < rightNum) {
             // leftNum = rightNum + (Math.floor(Math.random() * (10 - rightNum)) + 1);
             leftNum = Math.floor(Math.random() * 10) + 1;
         }
@@ -243,8 +245,6 @@ $(document).ready(function () {
         while (!Number.isInteger(leftNum / rightNum)) {
             leftNum = Math.floor(Math.random() * 10) + 1;
             rightNum = Math.floor(Math.random() * 10) + 1;
-            console.log("loop");
-            console.log(leftNum + " / " + rightNum);
         }
 
         const equation = leftNum + " / " + rightNum;
@@ -258,24 +258,35 @@ $(document).ready(function () {
 
     // Input (nothing), Output (void: generates 1 correct answer and 2 random incorrect answers on screen)
     function generateAnswerChoices() {
+        // Calculates correct answer of current question
+        correctAns = eval($("#question").find("p").text());
+
+        // Trigger narration of question
+        narrateCurrentPage();
+
         // Returns random integer 0, 1, or 2 to decide correctAns location
         const correctAnsId = Math.floor(Math.random() * 3);
 
         // Generate incorrect answers
-        const positiveOrNeg1 = Math.round(Math.random()) * 2 - 1;   // Returns either -1 or 1
-        const positiveOrNeg2 = Math.round(Math.random()) * 2 - 1;
+        let positiveOrNeg1 = Math.round(Math.random()) * 2 - 1;   // Returns either -1 or 1
+        let positiveOrNeg2 = Math.round(Math.random()) * 2 - 1;
 
         let incorrectChoice1 = correctAns + (positiveOrNeg1 * (Math.floor(Math.random() * 5) + 1));
 
         // Makes sure it is not a negative answer choice
         while (incorrectChoice1 < 0) {
+            console.log("loop1");
+            positiveOrNeg1 = Math.round(Math.random()) * 2 - 1;
             incorrectChoice1 = correctAns + (positiveOrNeg1 * (Math.floor(Math.random() * 5) + 1));
         }
 
         let incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
+        console.log(incorrectChoice1 + " " + incorrectChoice2);
 
         // Makes sure it is not a duplicate incorrect choice, and not a negative answer choice
-        while ((incorrectChoice2 === incorrectChoice1) || (incorrectChoice2 < 0)) {
+        while ((incorrectChoice2 == incorrectChoice1) || (incorrectChoice2 < 0)) {
+            console.log("loop2");
+            positiveOrNeg2 = Math.round(Math.random()) * 2 - 1;
             incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
         }
 
@@ -295,6 +306,8 @@ $(document).ready(function () {
             $("#answerOne").find("span").text(incorrectChoice1);
             $("#answerTwo").find("span").text(incorrectChoice2);
         }
+
+        console.log("Generated answer choices");
     };
 
 
@@ -328,16 +341,22 @@ $(document).ready(function () {
 
                 playerTakesDamage();
 
-                updateStreak();
-                generateQuestion();
-                generateQuestionTimer();
+                // New question and corresponding answer choices (only if still on battle page)
+                if (currentPage == "battlePage") {
+                    updateStreak();
+                    generateQuestion();
+                    generateQuestionTimer();
+                }
             }
         }, 1000)
+
+        console.log("New timer");
     };
 
     // Stops the current timer
     function stopQuestionTimer() {
         clearInterval(timer);
+        console.log("Timer Stopped");
     };
 
 
@@ -350,6 +369,7 @@ $(document).ready(function () {
             $("#comboNumber").text("Combo x" + streak);
             $("#damageNumber").empty();
         }
+        console.log("Updated streak");
     };
 
 
@@ -372,9 +392,10 @@ $(document).ready(function () {
 
     // Transitions to battle page upon clicking a difficulty on main menu
     $(".difficultyButton").click(function () {
-        console.log(this);
         difficulty = $(this).find("p").text();
         console.log(difficulty);
+
+        currentPage = "battlePage";
 
         $("#frontPageOuterWrapper").fadeOut(500, function () {
             playerName = $("#nameInput").val();
@@ -411,11 +432,14 @@ $(document).ready(function () {
         // Clicked answer choice becomes chosen answer and submitted
         $(this).addClass("chosenAnswer");
         submitAnswer();
+        console.log("Submitted answer");
 
-        // New question and corresponding answer choices
-        updateStreak();
-        generateQuestion();
-        generateQuestionTimer();
+        // New question and corresponding answer choices (only if still on battle page)
+        if (currentPage == "battlePage") {
+            updateStreak();
+            generateQuestion();
+            generateQuestionTimer();
+        }
     });
 
     // Interact with game with keyboard
@@ -425,16 +449,16 @@ $(document).ready(function () {
             if (!$(".focusable").hasClass("focused")) {
                 // If no answer choice is currently selected, select rightmost choice
                 $(".focusable").last().addClass("focused");
-            } else if ($(".focused").prev(".focusable").length) {
+            } else if ($(".focused").prevAll(".focusable").length) {
                 // If answer choice to left of current choice exists, select left choice
-                $(".focused").removeClass("focused").prev(".focusable").addClass("focused");
+                $(".focused").removeClass("focused").prevAll(".focusable:first").addClass("focused");
             } else {
                 // Else select rightmost answer choice (there is no other choice to left of current choice)
                 $(".focused").removeClass("focused").siblings(".focusable").last().addClass("focused");
             }
 
             // Triggers narration event
-            $(document).trigger("newFocus");
+            narrateFocusButton();
             // Switch button sound (makes a nicer sound when cloned)
             buttonSwitchSound.cloneNode().play();
         }
@@ -444,28 +468,28 @@ $(document).ready(function () {
             if (!$(".focusable").hasClass("focused")) {
                 // If no answer choice is currently selected, select leftmost choice
                 $(".focusable").first().addClass("focused");
-            } else if ($(".focused").next(".focusable").length) {
+            } else if ($(".focused").nextAll(".focusable").length) {
                 // If answer choice to right of current choice exists, select right choice
-                $(".focused").removeClass("focused").next(".focusable").addClass("focused");
+                $(".focused").removeClass("focused").nextAll(".focusable:first").addClass("focused");
             } else {
                 // Else select leftmost answer choice (there is no other choice to right of current choice)
                 $(".focused").removeClass("focused").siblings(".focusable").first().addClass("focused");
             }
 
             // Triggers narration event
-            $(document).trigger("newFocus");
+            narrateFocusButton();
             // Switch button sound (makes a nicer sound when cloned)
             buttonSwitchSound.cloneNode().play();
         }
 
         // Down arrow key causes narrator to repeat text of currently focused button
         if (e.keyCode == 40) {
-            $(document).trigger("newFocus");
+            narrateFocusButton();
         }
 
-        // Up arrow causes narrator to repeat current math equation (only if on battle page)
+        // Up arrow causes narrator to repeat relevant information on current page
         if (e.keyCode == 38) {
-            $(document).trigger("repeatQuestion");
+            narrateCurrentPage();
         }
 
         // Submit answer choice (or currently focused button) currently selected with spacebar
@@ -482,13 +506,6 @@ $(document).ready(function () {
         // Press Esc button to go back to main menu (only if main menu is not displayed)
         if (e.keyCode == 27 && $("#frontPageOuterWrapper").is(":hidden")) {
             $("#homeButton").click();
-
-            // Narrates "Returned to main menu" upon pressing Esc
-            narrator1.text = "Returned to main menu";
-                if (speechSynthesis.speaking) {
-                    speechSynthesis.cancel();
-                }
-                speechSynthesis.speak(narrator1);
         }
     });
 
@@ -499,7 +516,7 @@ $(document).ready(function () {
         $(this).addClass("focused");
 
         // Triggers narration event
-        $(document).trigger("newFocus");
+        narrateFocusButton();
     });
 
     // Return to front page when you click the left hand corner title or the home button
@@ -510,33 +527,41 @@ $(document).ready(function () {
 
     // Generate the Front Page
     function generateFrontPage() {
+        currentPage = "homePage";
+
         $("#battlePageOuterWrapper").fadeOut(500, function () {
             $("#frontPageOuterWrapper").fadeIn(500);
         });
 
-        // Sets current equation to be narrated as empty string
-        currentEquation == "";
-
         // Removes answer choices from being focusable after loading back into main menu, adds focusable back into difficulty buttons
         $(".focusable").removeClass("focusable focused");
-        $("#midSection").children().addClass("focusable");
+        $("#midSection").children(":not(#nameInputWrapper)").addClass("focusable");
+
+        // Narrates "Returned to main menu" upon pressing Esc
+        narrator1.text = "Returned to main menu";
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        speechSynthesis.speak(narrator1);
     }
 
     // End Game and create end page
     function endGame() {
         stopQuestionTimer();
+        currentPage = "gameOverPage";
 
         $("#battlePageOuterWrapper").fadeOut(500, function () {
             $("#score").html("You made it to Level " + level);
             $("#endPageOuterWrapper").fadeIn(500);
         });
 
-        // Sets current equation to be narrated as empty string
-        currentEquation == "";
-
         // Removes answer choices from being focusable after losing game, adds focusable into replay and home buttons
         $(".focusable").removeClass("focusable focused");
         $(".endButton").addClass("focusable");
+
+        narrateCurrentPage();
+
+        console.log("Endgame reached");
     }
 
     //when you click the replay button, replay the game
@@ -547,6 +572,8 @@ $(document).ready(function () {
     //rebuild game on difficulty you had previously set
     function replayGame() {
         $("#frontPageOuterWrapper").fadeOut(500, function () {
+            currentPage = "battlePage";
+
             playerName = $("#nameInput").val();
             resetHealth();
             updateStreak();
@@ -555,6 +582,7 @@ $(document).ready(function () {
             setName();
             level = 1;
             maxMonsterHealth = 40;
+
             $("#levelCounter").html("Level 1");
             $("#battlePageOuterWrapper").fadeIn("slow");
 
@@ -582,22 +610,27 @@ $(document).ready(function () {
 
     // Create Instructions Overlay
     $(document).on("click", "#instructionsButton", function () {
-        console.log("Pressed Instructions Button");
+        currentPage = "instructionsPage";
+
         $("#instructionsOuterWrapper").css("display", "flex");
 
         // Instantly adds focused status to instructions page back button, removes focusable elsewhere
         $(".focusable").removeClass("focusable focused");
-        $("#instructionsReturnButton").addClass("focusable focused");
+        $("#instructionsReturnButton").addClass("focusable");
+
+        narrateCurrentPage();
     });
 
     // Remove Instructions Overlay
     $(document).on("click", "#instructionsReturnButton", function () {
-        console.log("Pressed Instructions Button");
+        currentPage = "homePage";
+
         $("#instructionsOuterWrapper").css("display", "none");
 
         // Adds focusable back to main menu buttons, removes focusable elsewhere
         $(".focusable").removeClass("focusable focused");
-        $("#midSection").children().addClass("focusable");
+        $("#midSection").children(":not(#nameInputWrapper)").addClass("focusable");
+        $("#instructionsButton").addClass("focused");
     });
 
 });
