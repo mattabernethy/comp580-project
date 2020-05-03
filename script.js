@@ -9,7 +9,7 @@ $(document).ready(function () {
     let monsterHealth;
     let maxMonsterHealth = 40;
     let level;
-    let questionType = 0;
+    let questionType;
     let currentEquation = "";
     let currentPage = "homePage";   // homePage, instructionsPage, battlePage, gameOverPage
 
@@ -111,7 +111,7 @@ $(document).ready(function () {
         } else if (currentPage == "battlePage") {
             narrator1.text = currentEquation;
         } else {    // gameOverPage
-            narrator1.text = "You Lost! You made it to level " + level;
+            narrator1.text = "Game over! You made it to level " + level;
         }
 
         // Immediately cancels any current or queued speech, then talks
@@ -147,6 +147,7 @@ $(document).ready(function () {
 
                 questionType = temp;
 
+                level++;
                 updateLevel();
                 maxMonsterHealth += 5
                 monsterHealth = maxMonsterHealth;
@@ -201,6 +202,8 @@ $(document).ready(function () {
         const equation = leftNum + " + " + rightNum;
         currentEquation = "What is " + leftNum + " plus " + rightNum + "?";
         $("#question").find("p").text(equation);
+        correctAns = leftNum + rightNum;
+
         let name = "Addition Apparition";
         let imageURL = "assets/additionApparition.svg"
         generateMonster(name, imageURL);
@@ -226,6 +229,7 @@ $(document).ready(function () {
         const equation = leftNum + " - " + rightNum;
         currentEquation = "What is " + leftNum + " minus " + rightNum + "?";
         $("#question").find("p").text(equation);
+        correctAns = leftNum - rightNum;
 
         let name = "SubtractionSerpent";
         let imageURL = "assets/subtractionSerpent.svg"
@@ -238,6 +242,7 @@ $(document).ready(function () {
         const equation = leftNum + " * " + rightNum;
         currentEquation = "What is " + leftNum + " times " + rightNum + "?";
         $("#question").find("p").text(equation);
+        correctAns = leftNum * rightNum;
 
         let name = "Multiplication Mummy";
         let imageURL = "assets/multiplicationMummy.svg"
@@ -257,6 +262,7 @@ $(document).ready(function () {
         const equation = leftNum + " / " + rightNum;
         currentEquation = "What is " + leftNum + " over " + rightNum + "?";
         $("#question").find("p").text(equation);
+        correctAns = leftNum / rightNum;
 
         let name = "Division Demon";
         let imageURL = "assets/divisionDemon.svg"
@@ -265,9 +271,7 @@ $(document).ready(function () {
 
     // Input (nothing), Output (void: generates 1 correct answer and 2 random incorrect answers on screen)
     function generateAnswerChoices() {
-        // Calculates correct answer of current question
-        correctAns = eval($("#question").find("p").text());
-
+        
         // Returns random integer 0, 1, or 2 to decide correctAns location
         const correctAnsId = Math.floor(Math.random() * 3);
 
@@ -279,17 +283,14 @@ $(document).ready(function () {
 
         // Makes sure it is not a negative answer choice
         while (incorrectChoice1 < 0) {
-            console.log("loop1");
             positiveOrNeg1 = Math.round(Math.random()) * 2 - 1;
             incorrectChoice1 = correctAns + (positiveOrNeg1 * (Math.floor(Math.random() * 5) + 1));
         }
 
         let incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
-        console.log(incorrectChoice1 + " " + incorrectChoice2);
 
         // Makes sure it is not a duplicate incorrect choice, and not a negative answer choice
         while ((incorrectChoice2 == incorrectChoice1) || (incorrectChoice2 < 0)) {
-            console.log("loop2");
             positiveOrNeg2 = Math.round(Math.random()) * 2 - 1;
             incorrectChoice2 = correctAns + (positiveOrNeg2 * (Math.floor(Math.random() * 5) + 1));
         }
@@ -415,12 +416,17 @@ $(document).ready(function () {
 
         $("#frontPageOuterWrapper").fadeOut(500, function () {
             playerName = $("#nameInput").val();
+            streak = 0;
+            maxMonsterHealth = 40;
+            questionType = Math.floor(Math.random() * 4);   // Randomizes first monster upon starting game
+            resetHealth();
             updateStreak();
             generateQuestion();
             generateQuestionTimer();
             setName();
-            resetHealth();
+            console.log(maxMonsterHealth);
             level = 1;
+            updateLevel();
             $("#battlePageOuterWrapper").fadeIn("slow");
 
             // Removes difficulty buttons from being focusable after battlepage loaded, adds focusable into answer choices
@@ -535,9 +541,9 @@ $(document).ready(function () {
         narrateFocusButton();
     });
 
-    // Return to front page when you click the left hand corner title or the home button
+    // Resets everything on battlepage, then return to front page when you click the left hand corner title or the home button
     $(document).on("click", "#battleLogo, #homeButton", function () {
-        stopQuestionTimer()
+        stopQuestionTimer();
         generateFrontPage();
     });
 
@@ -591,15 +597,16 @@ $(document).ready(function () {
             currentPage = "battlePage";
 
             playerName = $("#nameInput").val();
+            maxMonsterHealth = 40;
+
+            questionType = Math.floor(Math.random() * 4);   // Randomizes monster upon replaying game
             resetHealth();
             updateStreak();
             generateQuestion();
             generateQuestionTimer();
             setName();
             level = 1;
-            maxMonsterHealth = 40;
-
-            $("#levelCounter").html("Level 1");
+            updateLevel();
             $("#battlePageOuterWrapper").fadeIn("slow");
 
             // Adds focusable into answer buttons and removes focusable elsewhere
@@ -620,7 +627,6 @@ $(document).ready(function () {
 
     //updates Level
     function updateLevel() {
-        level++;
         $("#levelCounter").html("Level " + level);
     }
 
