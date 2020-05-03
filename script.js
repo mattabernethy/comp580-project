@@ -18,9 +18,15 @@ $(document).ready(function () {
 
     // Initialize sounds
     let buttonSwitchSound = new Audio("./assets/switch-button.mp3");
-    buttonSwitchSound.playbackRate = 2.0;
-
     let buttonSelectSound = new Audio("./assets/select-button.mp3");
+
+    let wrongAnswerSound = new Audio("./assets/wrong-answer.mp3");
+    wrongAnswerSound.volume = 0.2;
+
+    let correctAnswerSound = new Audio("./assets/correct-answer.mp3");
+    correctAnswerSound.volume = 0.2;
+
+    let clockTickingSound = new Audio("./assets/clock-ticking.mp3");
 
     // Initialize text-to-speech below
     voices = [
@@ -184,6 +190,7 @@ $(document).ready(function () {
             generateDivQuestion();
         }
 
+        console.log("Generated question");
         generateAnswerChoices();
     }
 
@@ -261,9 +268,6 @@ $(document).ready(function () {
         // Calculates correct answer of current question
         correctAns = eval($("#question").find("p").text());
 
-        // Trigger narration of question
-        narrateCurrentPage();
-
         // Returns random integer 0, 1, or 2 to decide correctAns location
         const correctAnsId = Math.floor(Math.random() * 3);
 
@@ -307,6 +311,9 @@ $(document).ready(function () {
             $("#answerTwo").find("span").text(incorrectChoice2);
         }
 
+        // Trigger narration of question
+        narrateCurrentPage();
+
         console.log("Generated answer choices");
     };
 
@@ -334,12 +341,19 @@ $(document).ready(function () {
             timeRemaining = timeLimit - Math.floor((Date.now() - startTime) / 1000);
             $("#timerCountDown").text(timeRemaining);
             console.log(timeRemaining);
+            
+            // When timer hits 10 seconds remaining, clock ticking sounds start
+            if (Math.floor(timeRemaining) == 10) {
+
+                clockTickingSound.play();
+            }
 
             // If time runs out, you take damage. Then generate next question.
             if (Math.floor(timeRemaining) <= 0) {
                 clearInterval(timer);
 
                 playerTakesDamage();
+                wrongAnswerSound.play();
 
                 // New question and corresponding answer choices (only if still on battle page)
                 if (currentPage == "battlePage") {
@@ -384,8 +398,10 @@ $(document).ready(function () {
         // If correct, monster takes damage. If incorrect, you take damage.
         if (isCorrect) {
             monsterTakesDamage();
+            correctAnswerSound.play();
         } else {
             playerTakesDamage();
+            wrongAnswerSound.play();
         }
     };
 
@@ -496,7 +512,7 @@ $(document).ready(function () {
         if (e.keyCode == 32) {
             // Select button sound (only triggers if something is currently focused)
             if ($(".focused").length) {
-                buttonSelectSound.play();
+                buttonSelectSound.cloneNode().play();
             }
 
             // Spacebar simulates a click event on focused item
