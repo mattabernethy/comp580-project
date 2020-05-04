@@ -1,8 +1,6 @@
-  Matt Abernethy
-  Michael Qi
-  COMP 580
+  Matt Abernethy, Michael Qi, COMP 580
 
-  Final Report 
+  Final Report: 
 
   Math Cruncher 2000 is a math-based fighting game. The goal of this game is to train proficiency in basic math skills (addition, 
   subtraction, division, multiplication) for all children, but in an exciting gamified way. The player will fight through monsters 
