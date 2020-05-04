@@ -47,14 +47,16 @@
             </div>
 
             <div id="instructionsContent">
-                <p>This is a math inspired fighting game that has been targeted to be accessible by those that are visually impaired. See how far you can make it through the various frightening monsters and math equations! You'll need to think carefully and be on your toes if you want to
+                <p>This is a math inspired fighting game that has been targeted to be accessible by those who are visually impaired. See how far you can make it through the various frightening monsters and math equations! 
+                    Each monster will ask you to solve either an addition, multiplication, subtraction, or division math problem. You'll need to think carefully and be on your toes if you want to
                     make it far. But watch out! If you take too long the monsters might win! Good luck, and I wish you the best on your adventure!</p>
-                <p>Each monster will ask you to solve either an addition, multiplication, subtraction, or division math problem. You can choose your answer with the mouse or cycle through the answer choices using the arrow keys. To submit your answer, click the left mouse button
-                    or press space bar on the answer of your choice!</p>
+                <p>You can choose your answer with the mouse or cycle through the answer choices using the left and right arrow keys. To submit your answer, click the left mouse button
+                    or press space bar on the answer of your choice! For those who have visual impairment, we utilize text-to-speech to read aloud each equation and answer choices as well as if you deal or take damage. 
+                    To repeat the current math problem out loud, press the up arrow key. If you wish to repeat out loud the current button selected, press the down arrow key. You can also exit back to the main menu anytime 
+                    with the escape button located on the top right corner of the keyboard.</p>
                 <p>When you answer a question correctly you will take health away from a monster, but if you answer incorrectly or if time runs out you lose health! The harder the difficulty, the less time you have to answer.
-                    When the monster has no health left you will go to the next level, but the monsters will get stronger each as you progress. If you run out of
+                    When the monster has no health left you will go to the next level, but the monsters will gain more health with each level you complete. If you run out of
                     health, then it's game over! If you answer multiple questions right in a row, you get a combo multiplier and you deal double damage!</p>
-                <p>For those who have visual impairment, we utilize text-to-speech to read aloud each equation and answer choices as well as if you deal or take damage.</p>
             </div>
 
             <div id="instructionsReturnButton">
@@ -90,13 +92,13 @@
                         <p>(6 + 8) * 3</p>
                     </div>
                     <div id="answersWrapper">
-                        <div class="answerButton focusable" id="answerOne">
+                        <div class="answerButton" id="answerOne">
                             <span>42</span>
                         </div>
-                        <div class="answerButton focusable" id="answerTwo">
+                        <div class="answerButton" id="answerTwo">
                             <span>30</span>
                         </div>
-                        <div class="answerButton focusable" id="answerThree">
+                        <div class="answerButton" id="answerThree">
                             <span>46</span>
                         </div>
                     </div>
@@ -134,7 +136,7 @@
 
     <div class='f1' id="endPageOuterWrapper">
         <div id="endPageWrapper">
-            <div id="endHeader">You Lost!</div>
+            <div id="endHeader">Game Over!</div>
             <div id="score"></div>
             <div class = "endButton" id="replayButton"><p>Replay</p></div>
             <div class = "endButton" id="homeButton"><p>Home</p></div>
