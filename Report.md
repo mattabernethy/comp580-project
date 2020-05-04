@@ -11,7 +11,7 @@
   successful attack on the monster. If the player responds incorrectly or exceeds the time limit, then the monster successfully delivers 
   an attack on the player. Combo streaks are implemented for extra damage against the monster when the player gets a streak of at least 
   4 correct answers in a row. When the player defeats the monster in one level, they move on to the monster in the next level, with 
-  each world being a randomly generated monster (from a set of 4 monsters each corresponding to either addition, subtraction, 
+  each level being a randomly generated monster (from a set of 4 monsters each corresponding to either addition, subtraction, 
   multiplication, or division). However, with every level, the monster’s maximum health will increase. The game continues until the 
   player runs out of health, in which their score will be displayed on-screen.
 
