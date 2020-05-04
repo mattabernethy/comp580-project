@@ -1,6 +1,6 @@
-Matt Abernethy
-Michael Qi
-COMP 580
+  Matt Abernethy
+  Michael Qi
+  COMP 580
 
   Final Report 
 
