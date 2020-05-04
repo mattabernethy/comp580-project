@@ -15,3 +15,5 @@ Each monster will ask you to solve either an addition, multiplication, subtracti
 When you answer a question correctly you will take health away from a monster, but if you answer incorrectly or if time runs out you lose health! The harder the difficulty, the less time you have to answer. When the monster has no health left you will go to the next level, but the monsters will get stronger each as you progress. If you run out of health, then it's game over! If you answer multiple questions right in a row, you get a combo multiplier and you deal double damage!
 
 For those who have visual impairment, we utilize text-to-speech to read aloud each equation and answer choices as well as if you deal or take damage.
+
+Images are from flaticon.com
