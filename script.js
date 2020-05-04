@@ -119,6 +119,14 @@ $(document).ready(function () {
             speechSynthesis.cancel();
         }
         speechSynthesis.speak(narrator1);
+        let r = setInterval(() => {
+            console.log(speechSynthesis.speaking);
+            if (!speechSynthesis.speaking) {
+              clearInterval(r);
+            } else {
+              speechSynthesis.resume();
+            }
+          }, 14000);
     }
 
     // Sets default Player Name to be "Player"
